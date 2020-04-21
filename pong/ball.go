@@ -22,6 +22,13 @@ func init() {
 	rand.Seed(time.Now().UnixNano())
 }
 
+func (b *Ball) reset() {
+	b.x = (SCREEN_WIDTH / 2) - 2
+	b.y = (SCREEN_HEIGHT / 2) - 2
+	b.dx = 0
+	b.dy = 0
+}
+
 func (b *Ball) serve(servingPlayer *Player) {
 	b.dy = float64(randomNumInRange(-50, 50))
 
