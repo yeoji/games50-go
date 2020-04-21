@@ -2,7 +2,11 @@ package main
 
 import "github.com/hajimehoshi/ebiten"
 
+const PLAYER_1 = 1
+const PLAYER_2 = 2
+
 type Player struct {
+	PlayerNo int
 	Controls Controls
 	Paddle   *Paddle
 	Score    int

@@ -1,22 +1,58 @@
 package main
 
 import (
+	"fmt"
 	"image/color"
+	"io/ioutil"
 	"log"
 
+	"github.com/golang/freetype/truetype"
 	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/inpututil"
+	"github.com/hajimehoshi/ebiten/text"
+	"golang.org/x/image/font"
 )
 
 const SCREEN_WIDTH = 432
 const SCREEN_HEIGHT = 243
 
+const START_STATE = "start"
+const SERVE_STATE = "serve"
+const PLAY_STATE = "play"
+
 type Game struct {
-	Player1 Player
-	Player2 Player
-	Ball    Ball
+	State         string
+	Player1       *Player
+	Player2       *Player
+	Ball          Ball
+	Assets        Assets
+	ServingPlayer *Player
+}
+
+type Assets struct {
+	Fonts map[string]font.Face
 }
 
 func (g *Game) Update(screen *ebiten.Image) error {
+	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
+		switch g.State {
+		case START_STATE:
+			g.State = SERVE_STATE
+			break
+		case SERVE_STATE:
+			g.State = PLAY_STATE
+			g.Ball.serve(g.ServingPlayer)
+			break
+		}
+	}
+
+	if g.State == PLAY_STATE {
+		if g.Ball.collides(g.Player1.Paddle) || g.Ball.collides(g.Player2.Paddle) {
+			g.Ball.successfullyReturned()
+		}
+		g.Ball.update()
+	}
+
 	g.Player1.update()
 	g.Player2.update()
 
@@ -26,22 +62,54 @@ func (g *Game) Update(screen *ebiten.Image) error {
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.RGBA{40, 45, 52, 255})
 
+	switch g.State {
+	case START_STATE:
+		text.Draw(screen, "Welcome to Pong!", g.Assets.Fonts["smallFont"], SCREEN_WIDTH/2-37, 10, color.White)
+		text.Draw(screen, "Press Enter to begin!", g.Assets.Fonts["smallFont"], SCREEN_WIDTH/2-46, 20, color.White)
+		break
+	case SERVE_STATE:
+		text.Draw(screen, fmt.Sprintf("Player %d's serve!", g.ServingPlayer.PlayerNo), g.Assets.Fonts["smallFont"], SCREEN_WIDTH/2-35, 10, color.White)
+		text.Draw(screen, "Press Enter to serve!", g.Assets.Fonts["smallFont"], SCREEN_WIDTH/2-46, 20, color.White)
+		break
+	}
+
 	g.Player1.render(screen)
 	g.Player2.render(screen)
 	g.Ball.render(screen)
-
-	// ebitenutil.DebugPrint(screen, "Hello, World!")
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
 	return SCREEN_WIDTH, SCREEN_HEIGHT
 }
 
+func loadAssets() Assets {
+	assets := Assets{
+		Fonts: make(map[string]font.Face),
+	}
+
+	fontData, err := ioutil.ReadFile("assets/fonts/font.ttf")
+	if err != nil {
+		log.Fatalf("Error reading font file: %v", err)
+	}
+	font, err := truetype.Parse(fontData)
+	if err != nil {
+		log.Fatalf("Error parsing font: %v", err)
+	}
+	assets.Fonts["smallFont"] = truetype.NewFace(font, &truetype.Options{
+		Size: 8,
+	})
+
+	return assets
+}
+
 func main() {
 	ebiten.SetWindowSize(1280, 720)
 	ebiten.SetWindowTitle("Pong")
 
+	assets := loadAssets()
+
 	player1 := Player{
+		PlayerNo: PLAYER_1,
 		Controls: Controls{
 			Up:   ebiten.KeyW,
 			Down: ebiten.KeyS,
@@ -55,6 +123,7 @@ func main() {
 	}
 
 	player2 := Player{
+		PlayerNo: PLAYER_2,
 		Controls: Controls{
 			Up:   ebiten.KeyUp,
 			Down: ebiten.KeyDown,
@@ -75,9 +144,12 @@ func main() {
 	}
 
 	if err := ebiten.RunGame(&Game{
-		Player1: player1,
-		Player2: player2,
-		Ball:    ball,
+		State:         START_STATE,
+		Player1:       &player1,
+		Player2:       &player2,
+		Ball:          ball,
+		Assets:        assets,
+		ServingPlayer: &player1,
 	}); err != nil {
 		log.Fatal(err)
 	}
