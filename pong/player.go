@@ -17,6 +17,10 @@ type Controls struct {
 	Down ebiten.Key
 }
 
+func (p *Player) reset() {
+	p.Score = 0
+}
+
 func (p *Player) update() {
 	if ebiten.IsKeyPressed(p.Controls.Up) {
 		p.Paddle.moveUp()

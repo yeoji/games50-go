@@ -20,6 +20,7 @@ const SCREEN_HEIGHT = 243
 const START_STATE = "start"
 const SERVE_STATE = "serve"
 const PLAY_STATE = "play"
+const DONE_STATE = "done"
 
 type Game struct {
 	State         string
@@ -28,6 +29,7 @@ type Game struct {
 	Ball          Ball
 	Assets        Assets
 	ServingPlayer *Player
+	WinningPlayer *Player
 }
 
 type Assets struct {
@@ -44,6 +46,12 @@ func (g *Game) Update(screen *ebiten.Image) error {
 			g.State = PLAY_STATE
 			g.Ball.serve(g.ServingPlayer)
 			break
+		case DONE_STATE:
+			g.State = SERVE_STATE
+			g.Ball.reset()
+			g.Player1.reset()
+			g.Player2.reset()
+			break
 		}
 	}
 
@@ -55,14 +63,12 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		playerNo, scored := g.Ball.scored()
 		if scored {
 			if playerNo == PLAYER_1 {
-				g.Player1.Score++
+				g.updatePlayerScore(g.Player1)
 				g.ServingPlayer = g.Player2
 			} else {
-				g.Player2.Score++
+				g.updatePlayerScore(g.Player2)
 				g.ServingPlayer = g.Player1
 			}
-			g.State = SERVE_STATE
-			g.Ball.reset()
 		}
 		g.Ball.update()
 	}
@@ -71,6 +77,18 @@ func (g *Game) Update(screen *ebiten.Image) error {
 	g.Player2.update()
 
 	return nil
+}
+
+func (g *Game) updatePlayerScore(player *Player) {
+	player.Score++
+
+	if player.Score == 10 {
+		g.State = DONE_STATE
+		g.WinningPlayer = player
+	} else {
+		g.State = SERVE_STATE
+		g.Ball.reset()
+	}
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
@@ -84,6 +102,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	case SERVE_STATE:
 		text.Draw(screen, fmt.Sprintf("Player %d's serve!", g.ServingPlayer.PlayerNo), g.Assets.Fonts["smallFont"], SCREEN_WIDTH/2-35, 10, color.White)
 		text.Draw(screen, "Press Enter to serve!", g.Assets.Fonts["smallFont"], SCREEN_WIDTH/2-46, 20, color.White)
+		break
+	case DONE_STATE:
+		text.Draw(screen, fmt.Sprintf("Player %d wins!", g.WinningPlayer.PlayerNo), g.Assets.Fonts["largeFont"], SCREEN_WIDTH/2-55, 20, color.White)
+		text.Draw(screen, "Press Enter to restart!", g.Assets.Fonts["smallFont"], SCREEN_WIDTH/2-49, 30, color.White)
 		break
 	}
 
@@ -125,6 +147,9 @@ func loadAssets() Assets {
 
 	assets.Fonts["smallFont"] = truetype.NewFace(font, &truetype.Options{
 		Size: 8,
+	})
+	assets.Fonts["largeFont"] = truetype.NewFace(font, &truetype.Options{
+		Size: 16,
 	})
 	assets.Fonts["scoreFont"] = truetype.NewFace(font, &truetype.Options{
 		Size: 32,
