@@ -39,7 +39,14 @@ func (b *Ball) serve(servingPlayer *Player) {
 	}
 }
 
-func (b *Ball) successfullyReturned() {
+func (b *Ball) successfullyReturned(paddle *Paddle) {
+	// move ball to edge of paddle
+	if b.dx < 0 {
+		b.x = paddle.x + paddle.width
+	} else {
+		b.x = paddle.x - b.width
+	}
+
 	// keep vertical direction of ball the same
 	if b.dy < 0 {
 		b.dy = -float64(randomNumInRange(10, 150))

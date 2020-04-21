@@ -56,8 +56,11 @@ func (g *Game) Update(screen *ebiten.Image) error {
 	}
 
 	if g.State == PLAY_STATE {
-		if g.Ball.collides(g.Player1.Paddle) || g.Ball.collides(g.Player2.Paddle) {
-			g.Ball.successfullyReturned()
+		if g.Ball.collides(g.Player1.Paddle) {
+			g.Ball.successfullyReturned(g.Player1.Paddle)
+		}
+		if g.Ball.collides(g.Player2.Paddle) {
+			g.Ball.successfullyReturned(g.Player2.Paddle)
 		}
 
 		playerNo, scored := g.Ball.scored()
