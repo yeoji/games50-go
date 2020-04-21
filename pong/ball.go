@@ -85,11 +85,15 @@ func (b *Ball) update() {
 	b.y += b.dy * 1 / ebiten.CurrentTPS()
 
 	if b.y < 0 {
+		assets.Sounds["wallHit"].Play()
 		b.y = 0
 		b.dy = -b.dy
+		assets.Sounds["wallHit"].Rewind()
 	} else if b.y > SCREEN_HEIGHT-b.height {
+		assets.Sounds["wallHit"].Play()
 		b.y = SCREEN_HEIGHT - b.height
 		b.dy = -b.dy
+		assets.Sounds["wallHit"].Rewind()
 	}
 }
 
