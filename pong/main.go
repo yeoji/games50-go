@@ -50,6 +50,17 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		if g.Ball.collides(g.Player1.Paddle) || g.Ball.collides(g.Player2.Paddle) {
 			g.Ball.successfullyReturned()
 		}
+
+		playerNo, scored := g.Ball.scored()
+		if scored {
+			if playerNo == PLAYER_1 {
+				g.Player1.Score++
+				g.ServingPlayer = g.Player2
+			} else {
+				g.Player2.Score++
+				g.ServingPlayer = g.Player1
+			}
+		}
 		g.Ball.update()
 	}
 
@@ -73,9 +84,16 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		break
 	}
 
+	g.displayScore(screen)
+
 	g.Player1.render(screen)
 	g.Player2.render(screen)
 	g.Ball.render(screen)
+}
+
+func (g *Game) displayScore(screen *ebiten.Image) {
+	text.Draw(screen, fmt.Sprintf("%d", g.Player1.Score), g.Assets.Fonts["scoreFont"], SCREEN_WIDTH/2-50, SCREEN_HEIGHT/3, color.White)
+	text.Draw(screen, fmt.Sprintf("%d", g.Player2.Score), g.Assets.Fonts["scoreFont"], SCREEN_WIDTH/2+30, SCREEN_HEIGHT/3, color.White)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
@@ -95,8 +113,12 @@ func loadAssets() Assets {
 	if err != nil {
 		log.Fatalf("Error parsing font: %v", err)
 	}
+
 	assets.Fonts["smallFont"] = truetype.NewFace(font, &truetype.Options{
 		Size: 8,
+	})
+	assets.Fonts["scoreFont"] = truetype.NewFace(font, &truetype.Options{
+		Size: 32,
 	})
 
 	return assets

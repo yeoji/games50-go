@@ -56,6 +56,16 @@ func (b *Ball) collides(paddle *Paddle) bool {
 	return true
 }
 
+func (b *Ball) scored() (int, bool) {
+	if b.x > SCREEN_WIDTH {
+		return PLAYER_1, true
+	}
+	if b.x+b.width < 0 {
+		return PLAYER_2, true
+	}
+	return 0, false
+}
+
 func (b *Ball) update() {
 	b.x += b.dx * 1 / ebiten.CurrentTPS()
 	b.y += b.dy * 1 / ebiten.CurrentTPS()
