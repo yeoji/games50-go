@@ -32,7 +32,7 @@ func (p *Player) update(ball *Ball) {
 		} else if ball.y > p.Paddle.y+p.Paddle.height+AI_BUFFER_SPACE {
 			p.Paddle.moveDown()
 		}
-	} else {
+	} else if !p.AI {
 		if ebiten.IsKeyPressed(p.Controls.Up) {
 			p.Paddle.moveUp()
 		} else if ebiten.IsKeyPressed(p.Controls.Down) {

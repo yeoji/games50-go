@@ -5,7 +5,6 @@ The Games50 Pong game remade with the [Ebiten](https://github.com/hajimehoshi/eb
 ### Run the Game
 
 ```
-make build
 make run
 ```
 
