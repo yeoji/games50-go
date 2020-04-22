@@ -20,6 +20,7 @@ const PLAY_STATE = "play"
 const DONE_STATE = "done"
 
 var assets Assets
+var numPlayers = 1
 
 type Game struct {
 	State         string
@@ -31,10 +32,22 @@ type Game struct {
 }
 
 func (g *Game) Update(screen *ebiten.Image) error {
+	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
+		g.State = START_STATE
+		g.Ball.reset()
+		g.Player1.reset()
+		g.Player2.reset()
+		g.ServingPlayer = g.Player1
+	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
 		switch g.State {
 		case START_STATE:
 			g.State = SERVE_STATE
+			if numPlayers == 1 {
+				g.Player2.AI = true
+			} else {
+				g.Player2.AI = false
+			}
 			break
 		case SERVE_STATE:
 			g.State = PLAY_STATE
@@ -46,6 +59,15 @@ func (g *Game) Update(screen *ebiten.Image) error {
 			g.Player1.reset()
 			g.Player2.reset()
 			break
+		}
+	}
+
+	if g.State == START_STATE {
+		if inpututil.IsKeyJustPressed(ebiten.KeyLeft) && numPlayers == 2 {
+			numPlayers = 1
+		}
+		if inpututil.IsKeyJustPressed(ebiten.KeyRight) && numPlayers == 1 {
+			numPlayers = 2
 		}
 	}
 
@@ -76,8 +98,8 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		g.Ball.update()
 	}
 
-	g.Player1.update()
-	g.Player2.update()
+	g.Player1.update(&g.Ball)
+	g.Player2.update(&g.Ball)
 
 	return nil
 }
@@ -99,8 +121,12 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 	switch g.State {
 	case START_STATE:
-		text.Draw(screen, "Welcome to Pong!", assets.Fonts["smallFont"], SCREEN_WIDTH/2-37, 10, color.White)
-		text.Draw(screen, "Press Enter to begin!", assets.Fonts["smallFont"], SCREEN_WIDTH/2-46, 20, color.White)
+		text.Draw(screen, "Welcome to Pong!", assets.Fonts["largeFont"], SCREEN_WIDTH/2-75, 30, color.White)
+
+		text.Draw(screen, "Players", assets.Fonts["largeFont"], SCREEN_WIDTH/2-34, SCREEN_HEIGHT/2, color.White)
+		text.Draw(screen, fmt.Sprintf("< %d >", numPlayers), assets.Fonts["largeFont"], SCREEN_WIDTH/2-23, SCREEN_HEIGHT/2+20, color.White)
+
+		text.Draw(screen, "Select number of players and press Enter!", assets.Fonts["smallFont"], SCREEN_WIDTH/2-93, SCREEN_HEIGHT/2+50, color.White)
 		break
 	case SERVE_STATE:
 		text.Draw(screen, fmt.Sprintf("Player %d's serve!", g.ServingPlayer.PlayerNo), assets.Fonts["smallFont"], SCREEN_WIDTH/2-35, 10, color.White)
@@ -112,13 +138,15 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		break
 	}
 
-	g.displayScore(screen)
+	if g.State != START_STATE {
+		g.displayScore(screen)
 
-	g.Player1.render(screen)
-	g.Player2.render(screen)
-	g.Ball.render(screen)
+		g.Player1.render(screen)
+		g.Player2.render(screen)
+		g.Ball.render(screen)
 
-	g.displayFPS(screen)
+		g.displayFPS(screen)
+	}
 }
 
 func (g *Game) displayScore(screen *ebiten.Image) {
