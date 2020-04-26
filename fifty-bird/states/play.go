@@ -10,6 +10,8 @@ import (
 	"github.com/hajimehoshi/ebiten"
 )
 
+const GroundHeight = 16
+
 type PlayState struct {
 	Bird      objects.Bird
 	PipePairs []*objects.PipePair
@@ -22,6 +24,7 @@ func (s *PlayState) enter() {
 }
 
 func (s *PlayState) update(screen *ebiten.Image, stateMachine *StateMachine) {
+	_, screenHeight := screen.Size()
 	s.timer += 1 / ebiten.CurrentTPS()
 	if s.timer > 2 {
 		s.PipePairs = append(s.PipePairs, objects.NewPipePair(screen))
@@ -29,6 +32,11 @@ func (s *PlayState) update(screen *ebiten.Image, stateMachine *StateMachine) {
 	}
 
 	s.Bird.Update()
+	if s.Bird.HasHitTheGround(screenHeight-GroundHeight) || s.Bird.HasHitAnyPipes(s.PipePairs) {
+		stateMachine.Change(&ScoreState{
+			score: s.score,
+		})
+	}
 
 	for _, pipePair := range s.PipePairs {
 		pipePair.Update(screen)

@@ -2,6 +2,8 @@ package objects
 
 import (
 	"games50-go/internal/assets"
+	"games50-go/internal/utils"
+	"image"
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/inpututil"
@@ -43,4 +45,23 @@ func (b *Bird) Render(screen *ebiten.Image) {
 	birdOptions := &ebiten.DrawImageOptions{}
 	birdOptions.GeoM.Translate(b.x, b.y)
 	screen.DrawImage(b.image, birdOptions)
+}
+
+func (b *Bird) HasHitTheGround(groundY int) bool {
+	return int(b.y) > groundY
+}
+
+func (b *Bird) HasHitAnyPipes(pipePairs []*PipePair) bool {
+	for _, pipePair := range pipePairs {
+		if utils.Collides(b, &pipePair.Bottom) || utils.Collides(b, &pipePair.Top) {
+			return true
+		}
+	}
+	return false
+}
+
+func (b *Bird) BoundingBox() image.Rectangle {
+	birdWidth, birdHeight := b.image.Size()
+
+	return image.Rect(int(b.x), int(b.y), int(b.x)+birdWidth, int(b.y)+birdHeight)
 }
