@@ -44,6 +44,7 @@ func main() {
 			FontSizes: assets.FontSizeConfig{
 				"mediumFont": 14,
 				"flappyFont": 28,
+				"hugeFont":   56,
 			},
 		},
 	}, assets.SoundLoaderConfig{}, assets.ImageLoaderConfig{

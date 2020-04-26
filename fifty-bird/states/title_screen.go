@@ -6,6 +6,7 @@ import (
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/inpututil"
 )
 
 type TitleScreenState struct{}
@@ -14,8 +15,12 @@ func (s *TitleScreenState) enter() {
 	// do nothing
 }
 
-func (s *TitleScreenState) update() {
-	// do nothing
+func (s *TitleScreenState) update(stateMachine *StateMachine) {
+	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
+		stateMachine.Change(&CountdownState{
+			countdown: 3,
+		})
+	}
 }
 
 func (s *TitleScreenState) render(screen *ebiten.Image, assets *assets.Assets) {
