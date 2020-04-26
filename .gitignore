@@ -2,3 +2,4 @@ vendor
 build
 *.code-workspace
 .DS_Store
+.vscode

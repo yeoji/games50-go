@@ -3,7 +3,7 @@ package main
 import (
 	"games50-go/fifty-bird/states"
 	"games50-go/internal/assets"
-	"image/color"
+	_ "image/png"
 	"log"
 
 	"github.com/hajimehoshi/ebiten"
@@ -14,17 +14,19 @@ const SCREEN_HEIGHT = 288
 
 type Game struct {
 	stateMachine *states.StateMachine
+	scene        *Scene
 	assets       *assets.Assets
 }
 
 func (g *Game) Update(screen *ebiten.Image) error {
+	g.scene.update()
 	g.stateMachine.Update()
 
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	screen.Fill(color.RGBA{40, 45, 52, 255})
+	g.scene.render(screen)
 	g.stateMachine.Render(screen, g.assets)
 }
 
@@ -44,10 +46,18 @@ func main() {
 				"flappyFont": 28,
 			},
 		},
-	}, assets.SoundLoaderConfig{})
+	}, assets.SoundLoaderConfig{}, assets.ImageLoaderConfig{
+		"background": "assets/art/background.png",
+		"ground":     "assets/art/ground.png",
+	})
 
 	if err := ebiten.RunGame(&Game{
 		assets: &assets,
+		scene: &Scene{
+			Background: assets.Images["background"],
+			Ground:     assets.Images["ground"],
+			scrolling:  true,
+		},
 		stateMachine: &states.StateMachine{
 			Current: &states.TitleScreenState{},
 		},

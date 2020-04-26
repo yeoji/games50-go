@@ -181,7 +181,7 @@ func main() {
 		"paddleHit": "assets/sounds/paddle_hit.wav",
 		"score":     "assets/sounds/score.wav",
 		"wallHit":   "assets/sounds/wall_hit.wav",
-	})
+	}, assetsLoader.ImageLoaderConfig{})
 
 	player1 := Player{
 		PlayerNo: PLAYER_1,
