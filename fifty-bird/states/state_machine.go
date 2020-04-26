@@ -1,6 +1,10 @@
 package states
 
-import "github.com/hajimehoshi/ebiten"
+import (
+	"games50-go/internal/assets"
+
+	"github.com/hajimehoshi/ebiten"
+)
 
 type StateMachine struct {
 	Current State
@@ -9,7 +13,7 @@ type StateMachine struct {
 type State interface {
 	enter()
 	update()
-	render(screen *ebiten.Image)
+	render(screen *ebiten.Image, assets *assets.Assets)
 	exit()
 }
 
@@ -23,6 +27,6 @@ func (sm *StateMachine) Update() {
 	sm.Current.update()
 }
 
-func (sm *StateMachine) Render(screen *ebiten.Image) {
-	sm.Current.render(screen)
+func (sm *StateMachine) Render(screen *ebiten.Image, assets *assets.Assets) {
+	sm.Current.render(screen, assets)
 }
