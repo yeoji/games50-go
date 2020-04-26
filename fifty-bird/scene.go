@@ -26,11 +26,6 @@ func (s *Scene) update() {
 	}
 }
 
-func (s *Scene) render(screen *ebiten.Image) {
-	s.drawBackground(screen)
-	s.drawGround(screen)
-}
-
 func (s *Scene) drawBackground(screen *ebiten.Image) {
 	backgroundOptions := &ebiten.DrawImageOptions{}
 	backgroundOptions.GeoM.Translate(s.backgroundPos, 0)

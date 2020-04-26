@@ -26,8 +26,9 @@ func (g *Game) Update(screen *ebiten.Image) error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.scene.render(screen)
+	g.scene.drawBackground(screen)
 	g.stateMachine.Render(screen, g.assets)
+	g.scene.drawGround(screen)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {

@@ -7,7 +7,6 @@ import (
 	"github.com/hajimehoshi/ebiten/inpututil"
 )
 
-const SCREEN_HEIGHT = 288
 const Gravity = 20
 const JumpHeight = -5
 
