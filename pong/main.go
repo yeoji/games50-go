@@ -6,6 +6,8 @@ import (
 	"log"
 	"math"
 
+	assetsLoader "games50-go/internal/assets"
+
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/inpututil"
 	"github.com/hajimehoshi/ebiten/text"
@@ -19,7 +21,7 @@ const SERVE_STATE = "serve"
 const PLAY_STATE = "play"
 const DONE_STATE = "done"
 
-var assets Assets
+var assets assetsLoader.Assets
 var numPlayers = 1
 
 type Game struct {
@@ -166,7 +168,20 @@ func main() {
 	ebiten.SetWindowSize(1280, 720)
 	ebiten.SetWindowTitle("Pong")
 
-	assets = loadAssets()
+	assets = assetsLoader.LoadAssets([]assetsLoader.FontLoaderConfig{
+		{
+			File: "assets/fonts/font.ttf",
+			FontSizes: assetsLoader.FontSizeConfig{
+				"smallFont": 8,
+				"largeFont": 16,
+				"scoreFont": 32,
+			},
+		},
+	}, assetsLoader.SoundLoaderConfig{
+		"paddleHit": "assets/sounds/paddle_hit.wav",
+		"score":     "assets/sounds/score.wav",
+		"wallHit":   "assets/sounds/wall_hit.wav",
+	})
 
 	player1 := Player{
 		PlayerNo: PLAYER_1,
