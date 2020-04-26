@@ -12,7 +12,7 @@ type StateMachine struct {
 
 type State interface {
 	enter()
-	update(stateMachine *StateMachine)
+	update(screen *ebiten.Image, stateMachine *StateMachine)
 	render(screen *ebiten.Image, assets *assets.Assets)
 	exit()
 }
@@ -23,8 +23,8 @@ func (sm *StateMachine) Change(state State) {
 	sm.Current.enter()
 }
 
-func (sm *StateMachine) Update() {
-	sm.Current.update(sm)
+func (sm *StateMachine) Update(screen *ebiten.Image) {
+	sm.Current.update(screen, sm)
 }
 
 func (sm *StateMachine) Render(screen *ebiten.Image, assets *assets.Assets) {

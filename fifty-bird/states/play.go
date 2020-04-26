@@ -1,6 +1,8 @@
 package states
 
 import (
+	"fmt"
+	"games50-go/fifty-bird/objects"
 	"games50-go/internal/assets"
 	"games50-go/internal/utils"
 	"image/color"
@@ -9,23 +11,25 @@ import (
 )
 
 type PlayState struct {
+	Bird  objects.Bird
+	score int
 }
 
 func (s *PlayState) enter() {
-	// do nothing
+	// do nothin
 }
 
-func (s *PlayState) update(stateMachine *StateMachine) {
-	// do nothing
+func (s *PlayState) update(screen *ebiten.Image, stateMachine *StateMachine) {
+	s.Bird.Update()
 }
 
 func (s *PlayState) render(screen *ebiten.Image, assets *assets.Assets) {
-	utils.DrawText(screen, "Play", 0, 0, utils.TextOptions{
-		Font:            assets.Fonts["hugeFont"],
-		Color:           color.White,
-		HorizontalAlign: utils.CenterAlign,
-		VerticalAlign:   utils.CenterAlign,
+	utils.DrawText(screen, fmt.Sprintf("Score: %d", s.score), 8, 8, utils.TextOptions{
+		Font:  assets.Fonts["flappyFont"],
+		Color: color.White,
 	})
+
+	s.Bird.Render(screen)
 }
 
 func (s *PlayState) exit() {

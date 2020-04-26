@@ -20,7 +20,7 @@ type Game struct {
 
 func (g *Game) Update(screen *ebiten.Image) error {
 	g.scene.update()
-	g.stateMachine.Update()
+	g.stateMachine.Update(screen)
 
 	return nil
 }
@@ -38,7 +38,7 @@ func main() {
 	ebiten.SetWindowSize(1280, 720)
 	ebiten.SetWindowTitle("Fifty Bird")
 
-	assets := assets.LoadAssets([]assets.FontLoaderConfig{
+	loadedAssets := assets.LoadAssets([]assets.FontLoaderConfig{
 		{
 			File: "assets/fonts/flappy.ttf",
 			FontSizes: assets.FontSizeConfig{
@@ -47,16 +47,13 @@ func main() {
 				"hugeFont":   56,
 			},
 		},
-	}, assets.SoundLoaderConfig{}, assets.ImageLoaderConfig{
-		"background": "assets/art/background.png",
-		"ground":     "assets/art/ground.png",
-	})
+	}, assets.SoundLoaderConfig{})
 
 	if err := ebiten.RunGame(&Game{
-		assets: &assets,
+		assets: &loadedAssets,
 		scene: &Scene{
-			Background: assets.Images["background"],
-			Ground:     assets.Images["ground"],
+			Background: assets.LoadImage("assets/art/background.png"),
+			Ground:     assets.LoadImage("assets/art/ground.png"),
 			scrolling:  true,
 		},
 		stateMachine: &states.StateMachine{

@@ -47,6 +47,9 @@ func DrawText(screen *ebiten.Image, content string, x int, y int, options TextOp
 		drawingBoxHeight := screenHeight + y
 		actualY = drawingBoxHeight/2 - textHeight/2
 		break
+	default:
+		actualY = textHeight + y
+		break
 	}
 
 	text.Draw(screen, content, options.Font, actualX, actualY, options.Color)

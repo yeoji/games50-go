@@ -2,6 +2,7 @@ package states
 
 import (
 	"fmt"
+	"games50-go/fifty-bird/objects"
 	"games50-go/internal/assets"
 	"games50-go/internal/utils"
 	"image/color"
@@ -29,9 +30,11 @@ func (s *CountdownState) enter() {
 	}()
 }
 
-func (s *CountdownState) update(stateMachine *StateMachine) {
+func (s *CountdownState) update(screen *ebiten.Image, stateMachine *StateMachine) {
 	if s.countdown == 0 {
-		stateMachine.Change(&PlayState{})
+		stateMachine.Change(&PlayState{
+			Bird: objects.NewBird(screen),
+		})
 	}
 }
 

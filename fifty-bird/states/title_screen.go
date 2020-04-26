@@ -15,7 +15,7 @@ func (s *TitleScreenState) enter() {
 	// do nothing
 }
 
-func (s *TitleScreenState) update(stateMachine *StateMachine) {
+func (s *TitleScreenState) update(screen *ebiten.Image, stateMachine *StateMachine) {
 	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
 		stateMachine.Change(&CountdownState{
 			countdown: 3,

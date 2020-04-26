@@ -1,13 +1,10 @@
 package assets
 
 import (
-	"image"
 	"io/ioutil"
 	"log"
-	"os"
 
 	"github.com/golang/freetype/truetype"
-	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/audio"
 	"golang.org/x/image/font"
 )
@@ -17,7 +14,6 @@ const SAMPLE_RATE = 44100
 type Assets struct {
 	Fonts  map[string]font.Face
 	Sounds map[string]*audio.Player
-	Images map[string]*ebiten.Image
 }
 
 type FontSizeConfig map[string]float64
@@ -29,9 +25,7 @@ type FontLoaderConfig struct {
 // map of sound name and sound file
 type SoundLoaderConfig map[string]string
 
-type ImageLoaderConfig map[string]string
-
-func LoadAssets(fonts []FontLoaderConfig, sounds SoundLoaderConfig, images ImageLoaderConfig) Assets {
+func LoadAssets(fonts []FontLoaderConfig, sounds SoundLoaderConfig) Assets {
 	audioContext, err := audio.NewContext(SAMPLE_RATE)
 	if err != nil {
 		log.Fatalf("Could not initialize audio context: %v", err)
@@ -40,7 +34,6 @@ func LoadAssets(fonts []FontLoaderConfig, sounds SoundLoaderConfig, images Image
 	assets := Assets{
 		Fonts:  loadFonts(fonts),
 		Sounds: loadSounds(audioContext, sounds),
-		Images: loadImages(images),
 	}
 
 	return assets
@@ -82,25 +75,4 @@ func loadSounds(audioContext *audio.Context, soundsToLoad SoundLoaderConfig) map
 	}
 
 	return sounds
-}
-
-func loadImages(imagesToLoad ImageLoaderConfig) map[string]*ebiten.Image {
-	images := make(map[string]*ebiten.Image)
-
-	for name, file := range imagesToLoad {
-		file, err := os.Open(file)
-		defer file.Close()
-		if err != nil {
-			log.Fatalf("Error loading image asset: %v", err)
-		}
-
-		decoded, _, err := image.Decode(file)
-		if err != nil {
-			log.Fatalf("Error loading image asset: %v", err)
-		}
-
-		images[name], _ = ebiten.NewImageFromImage(decoded, ebiten.FilterDefault)
-	}
-
-	return images
 }
