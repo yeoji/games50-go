@@ -13,10 +13,17 @@ import (
 
 type ScoreState struct {
 	score int
+	medal *ebiten.Image
 }
 
 func (s *ScoreState) enter() {
-	// do nothing
+	if s.score < 10 {
+		s.medal = assets.LoadImage("assets/art/bronze_medal.png")
+	} else if s.score < 15 {
+		s.medal = assets.LoadImage("assets/art/silver_medal.png")
+	} else {
+		s.medal = assets.LoadImage("assets/art/gold_medal.png")
+	}
 }
 
 func (s *ScoreState) update(screen *ebiten.Image, stateMachine *StateMachine) {
@@ -40,11 +47,23 @@ func (s *ScoreState) render(screen *ebiten.Image, assets *assets.Assets) {
 		HorizontalAlign: utils.CenterAlign,
 	})
 
-	utils.DrawText(screen, "Press Enter to play again!", 0, 160, utils.TextOptions{
+	s.drawMedal(screen)
+
+	_, medalHeight := s.medal.Size()
+	utils.DrawText(screen, "Press Enter to play again!", 0, 160+medalHeight, utils.TextOptions{
 		Font:            assets.Fonts["mediumFont"],
 		Color:           color.White,
 		HorizontalAlign: utils.CenterAlign,
 	})
+}
+
+func (s *ScoreState) drawMedal(screen *ebiten.Image) {
+	screenWidth, _ := screen.Size()
+	medalWidth, _ := s.medal.Size()
+
+	medalOptions := &ebiten.DrawImageOptions{}
+	medalOptions.GeoM.Translate(float64(screenWidth/2-medalWidth/2), 130)
+	screen.DrawImage(s.medal, medalOptions)
 }
 
 func (s *ScoreState) exit() {
