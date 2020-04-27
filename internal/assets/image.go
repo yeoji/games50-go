@@ -1,21 +1,15 @@
 package assets
 
 import (
+	"bytes"
 	"image"
 	"log"
-	"os"
 
 	"github.com/hajimehoshi/ebiten"
 )
 
-func LoadImage(filePath string) *ebiten.Image {
-	file, err := os.Open(filePath)
-	defer file.Close()
-	if err != nil {
-		log.Fatalf("Error loading image asset: %v", err)
-	}
-
-	decoded, _, err := image.Decode(file)
+func LoadImage(imageData []byte) *ebiten.Image {
+	decoded, _, err := image.Decode(bytes.NewReader(imageData))
 	if err != nil {
 		log.Fatalf("Error loading image asset: %v", err)
 	}

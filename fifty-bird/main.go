@@ -1,6 +1,9 @@
 package main
 
 import (
+	"games50-go/fifty-bird/assets/art"
+	"games50-go/fifty-bird/assets/fonts"
+	"games50-go/fifty-bird/assets/sounds"
 	"games50-go/fifty-bird/states"
 	"games50-go/internal/assets"
 	_ "image/png"
@@ -45,7 +48,7 @@ func main() {
 
 	loadedAssets := assets.LoadAssets([]assets.FontLoaderConfig{
 		{
-			File: "assets/fonts/flappy.ttf",
+			FontData: fonts.Flappy_ttf,
 			FontSizes: assets.FontSizeConfig{
 				"mediumFont": 14,
 				"flappyFont": 28,
@@ -53,20 +56,20 @@ func main() {
 			},
 		},
 	}, assets.SoundLoaderConfig{
-		"pause":     "assets/sounds/pause.wav",
-		"jump":      "assets/sounds/jump.wav",
-		"score":     "assets/sounds/score.wav",
-		"explosion": "assets/sounds/explosion.wav",
-		"hurt":      "assets/sounds/hurt.wav",
+		"pause":     sounds.Pause_wav,
+		"jump":      sounds.Jump_wav,
+		"score":     sounds.Score_wav,
+		"explosion": sounds.Explosion_wav,
+		"hurt":      sounds.Hurt_wav,
 	})
 
-	bgm := assets.NewLoopingAudio("assets/sounds/marios_way.mp3")
+	bgm := assets.NewLoopingAudio(sounds.MariosWay_mp3)
 	bgm.Play()
 
 	if err := ebiten.RunGame(&Game{
 		scene: &Scene{
-			Background: assets.LoadImage("assets/art/background.png"),
-			Ground:     assets.LoadImage("assets/art/ground.png"),
+			Background: assets.LoadImage(art.Background_png),
+			Ground:     assets.LoadImage(art.Ground_png),
 			scrolling:  true,
 		},
 		stateMachine: &states.StateMachine{

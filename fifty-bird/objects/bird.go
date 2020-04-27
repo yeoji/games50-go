@@ -1,6 +1,7 @@
 package objects
 
 import (
+	"games50-go/fifty-bird/assets/art"
 	"games50-go/internal/assets"
 	"games50-go/internal/utils"
 	"image"
@@ -21,7 +22,7 @@ type Bird struct {
 
 func NewBird(screen *ebiten.Image) Bird {
 	screenWidth, screenHeight := screen.Size()
-	birdImage := assets.LoadImage("assets/art/bird.png")
+	birdImage := assets.LoadImage(art.Bird_png)
 	birdWidth, birdHeight := birdImage.Size()
 
 	return Bird{

@@ -1,9 +1,7 @@
 package assets
 
 import (
-	"io/ioutil"
 	"log"
-	"os"
 
 	"github.com/hajimehoshi/ebiten/audio"
 	"github.com/hajimehoshi/ebiten/audio/mp3"
@@ -12,30 +10,22 @@ import (
 const SAMPLE_RATE = 44100
 
 // map of sound name and sound file
-type SoundLoaderConfig map[string]string
+type SoundLoaderConfig map[string][]byte
 
 func loadSounds(audioContext *audio.Context, soundsToLoad SoundLoaderConfig) map[string]*audio.Player {
 	sounds := make(map[string]*audio.Player)
 
-	for name, file := range soundsToLoad {
-		sound, err := ioutil.ReadFile(file)
-		if err != nil {
-			log.Fatalf("Error reading sounds asset: %v", err)
-		}
+	for name, sound := range soundsToLoad {
 		sounds[name], _ = audio.NewPlayerFromBytes(audioContext, sound)
 	}
 
 	return sounds
 }
 
-func NewLoopingAudio(filePath string) *audio.Player {
+func NewLoopingAudio(sound []byte) *audio.Player {
 	audioContext := getAudioContext()
 
-	audioFile, err := os.Open(filePath)
-	if err != nil {
-		log.Fatalf("Could not open audio file: %v", err)
-	}
-	stream, err := mp3.Decode(audioContext, audioFile)
+	stream, err := mp3.Decode(audioContext, audio.BytesReadSeekCloser(sound))
 	if err != nil {
 		log.Fatalf("Error decoding audio file: %v", err)
 	}

@@ -3,3 +3,4 @@ build
 *.code-workspace
 .DS_Store
 .vscode
+*/assets/**/*.generated.go

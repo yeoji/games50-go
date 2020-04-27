@@ -1,6 +1,7 @@
 package states
 
 import (
+	"games50-go/fifty-bird/assets/art"
 	"games50-go/internal/assets"
 	"games50-go/internal/utils"
 	"image/color"
@@ -15,7 +16,7 @@ type PauseState struct {
 }
 
 func (s *PauseState) enter() {
-	s.pauseIcon = assets.LoadImage("assets/art/pause.png")
+	s.pauseIcon = assets.LoadImage(art.Pause_png)
 }
 
 func (s *PauseState) update(screen *ebiten.Image, stateMachine *StateMachine) {

@@ -1,7 +1,6 @@
 package assets
 
 import (
-	"io/ioutil"
 	"log"
 
 	"github.com/golang/freetype/truetype"
@@ -16,7 +15,7 @@ type Assets struct {
 
 type FontSizeConfig map[string]float64
 type FontLoaderConfig struct {
-	File      string
+	FontData  []byte
 	FontSizes FontSizeConfig
 }
 
@@ -36,11 +35,7 @@ func loadFonts(fontsToLoad []FontLoaderConfig) map[string]font.Face {
 	fonts := make(map[string]font.Face)
 
 	for _, fontToLoad := range fontsToLoad {
-		fontData, err := ioutil.ReadFile(fontToLoad.File)
-		if err != nil {
-			log.Fatalf("Error reading font file: %v", err)
-		}
-		font, err := truetype.Parse(fontData)
+		font, err := truetype.Parse(fontToLoad.FontData)
 		if err != nil {
 			log.Fatalf("Error parsing font: %v", err)
 		}

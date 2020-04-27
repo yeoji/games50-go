@@ -1,6 +1,7 @@
 package objects
 
 import (
+	"games50-go/fifty-bird/assets/art"
 	"games50-go/internal/assets"
 	"games50-go/internal/utils"
 	"image"
@@ -24,7 +25,7 @@ type Pipe struct {
 }
 
 func NewPipe(location string, x float64, y float64) Pipe {
-	pipeImage := assets.LoadImage("assets/art/pipe.png")
+	pipeImage := assets.LoadImage(art.Pipe_png)
 	pipeWidth, pipeHeight := pipeImage.Size()
 
 	return Pipe{

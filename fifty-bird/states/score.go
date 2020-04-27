@@ -2,6 +2,7 @@ package states
 
 import (
 	"fmt"
+	"games50-go/fifty-bird/assets/art"
 	"games50-go/fifty-bird/objects"
 	"games50-go/internal/assets"
 	"games50-go/internal/utils"
@@ -18,11 +19,11 @@ type ScoreState struct {
 
 func (s *ScoreState) enter() {
 	if s.score < 10 {
-		s.medal = assets.LoadImage("assets/art/bronze_medal.png")
+		s.medal = assets.LoadImage(art.BronzeMedal_png)
 	} else if s.score < 15 {
-		s.medal = assets.LoadImage("assets/art/silver_medal.png")
+		s.medal = assets.LoadImage(art.SilverMedal_png)
 	} else {
-		s.medal = assets.LoadImage("assets/art/gold_medal.png")
+		s.medal = assets.LoadImage(art.GoldMedal_png)
 	}
 }
 

@@ -7,6 +7,8 @@ import (
 	"math"
 
 	assetsLoader "games50-go/internal/assets"
+	"games50-go/pong/assets/fonts"
+	"games50-go/pong/assets/sounds"
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/inpututil"
@@ -170,7 +172,7 @@ func main() {
 
 	assets = assetsLoader.LoadAssets([]assetsLoader.FontLoaderConfig{
 		{
-			File: "assets/fonts/font.ttf",
+			FontData: fonts.Font_ttf,
 			FontSizes: assetsLoader.FontSizeConfig{
 				"smallFont": 8,
 				"largeFont": 16,
@@ -178,9 +180,9 @@ func main() {
 			},
 		},
 	}, assetsLoader.SoundLoaderConfig{
-		"paddleHit": "assets/sounds/paddle_hit.wav",
-		"score":     "assets/sounds/score.wav",
-		"wallHit":   "assets/sounds/wall_hit.wav",
+		"paddleHit": sounds.PaddleHit_wav,
+		"score":     sounds.Score_wav,
+		"wallHit":   sounds.WallHit_wav,
 	})
 
 	player1 := Player{
