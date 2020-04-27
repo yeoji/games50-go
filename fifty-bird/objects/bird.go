@@ -32,8 +32,10 @@ func NewBird(screen *ebiten.Image) Bird {
 	}
 }
 
-func (b *Bird) Update() {
+func (b *Bird) Update(assets *assets.Assets) {
 	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+		assets.Sounds["jump"].Play()
+		assets.Sounds["jump"].Rewind()
 		b.dy = JumpHeight
 	} else {
 		b.dy += Gravity * 1 / ebiten.CurrentTPS()

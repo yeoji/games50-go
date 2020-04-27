@@ -9,8 +9,6 @@ import (
 	"golang.org/x/image/font"
 )
 
-const SAMPLE_RATE = 44100
-
 type Assets struct {
 	Fonts  map[string]font.Face
 	Sounds map[string]*audio.Player
@@ -22,14 +20,8 @@ type FontLoaderConfig struct {
 	FontSizes FontSizeConfig
 }
 
-// map of sound name and sound file
-type SoundLoaderConfig map[string]string
-
 func LoadAssets(fonts []FontLoaderConfig, sounds SoundLoaderConfig) Assets {
-	audioContext, err := audio.NewContext(SAMPLE_RATE)
-	if err != nil {
-		log.Fatalf("Could not initialize audio context: %v", err)
-	}
+	audioContext := getAudioContext()
 
 	assets := Assets{
 		Fonts:  loadFonts(fonts),
@@ -61,18 +53,4 @@ func loadFonts(fontsToLoad []FontLoaderConfig) map[string]font.Face {
 	}
 
 	return fonts
-}
-
-func loadSounds(audioContext *audio.Context, soundsToLoad SoundLoaderConfig) map[string]*audio.Player {
-	sounds := make(map[string]*audio.Player)
-
-	for name, file := range soundsToLoad {
-		sound, err := ioutil.ReadFile(file)
-		if err != nil {
-			log.Fatalf("Error reading sounds asset: %v", err)
-		}
-		sounds[name], _ = audio.NewPlayerFromBytes(audioContext, sound)
-	}
-
-	return sounds
 }

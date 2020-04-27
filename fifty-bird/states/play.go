@@ -27,6 +27,8 @@ func (s *PlayState) enter() {
 
 func (s *PlayState) update(screen *ebiten.Image, stateMachine *StateMachine) {
 	if inpututil.IsKeyJustPressed(ebiten.KeyP) {
+		stateMachine.Assets.Sounds["pause"].Play()
+		stateMachine.Assets.Sounds["pause"].Rewind()
 		stateMachine.Change(&PauseState{
 			currentPlayState: s,
 		})
@@ -44,8 +46,14 @@ func (s *PlayState) update(screen *ebiten.Image, stateMachine *StateMachine) {
 		s.pipeInterval = utils.RandomNumInRange(1, 3)
 	}
 
-	s.Bird.Update()
+	s.Bird.Update(stateMachine.Assets)
 	if s.Bird.HasHitTheGround(screenHeight-GroundHeight) || s.Bird.HasHitAnyPipes(s.PipePairs) {
+		stateMachine.Assets.Sounds["explosion"].Play()
+		stateMachine.Assets.Sounds["hurt"].Play()
+
+		stateMachine.Assets.Sounds["explosion"].Rewind()
+		stateMachine.Assets.Sounds["hurt"].Rewind()
+
 		stateMachine.Change(&ScoreState{
 			score: s.score,
 		})
@@ -54,6 +62,8 @@ func (s *PlayState) update(screen *ebiten.Image, stateMachine *StateMachine) {
 	for _, pipePair := range s.PipePairs {
 		pipePair.Update(screen)
 		if !pipePair.Scored && s.Bird.HasPassedPipes(pipePair) {
+			stateMachine.Assets.Sounds["score"].Play()
+			stateMachine.Assets.Sounds["score"].Rewind()
 			pipePair.Scored = true
 			s.score++
 		}

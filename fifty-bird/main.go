@@ -16,7 +16,6 @@ const SCREEN_HEIGHT = 288
 type Game struct {
 	stateMachine *states.StateMachine
 	scene        *Scene
-	assets       *assets.Assets
 }
 
 func (g *Game) Update(screen *ebiten.Image) error {
@@ -32,7 +31,7 @@ func (g *Game) Update(screen *ebiten.Image) error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.scene.drawBackground(screen)
-	g.stateMachine.Render(screen, g.assets)
+	g.stateMachine.Render(screen)
 	g.scene.drawGround(screen)
 }
 
@@ -53,10 +52,18 @@ func main() {
 				"hugeFont":   56,
 			},
 		},
-	}, assets.SoundLoaderConfig{})
+	}, assets.SoundLoaderConfig{
+		"pause":     "assets/sounds/pause.wav",
+		"jump":      "assets/sounds/jump.wav",
+		"score":     "assets/sounds/score.wav",
+		"explosion": "assets/sounds/explosion.wav",
+		"hurt":      "assets/sounds/hurt.wav",
+	})
+
+	bgm := assets.NewLoopingAudio("assets/sounds/marios_way.mp3")
+	bgm.Play()
 
 	if err := ebiten.RunGame(&Game{
-		assets: &loadedAssets,
 		scene: &Scene{
 			Background: assets.LoadImage("assets/art/background.png"),
 			Ground:     assets.LoadImage("assets/art/ground.png"),
@@ -64,6 +71,7 @@ func main() {
 		},
 		stateMachine: &states.StateMachine{
 			Current: &states.TitleScreenState{},
+			Assets:  &loadedAssets,
 		},
 	}); err != nil {
 		log.Fatal(err)

@@ -8,6 +8,7 @@ import (
 
 type StateMachine struct {
 	Current State
+	Assets  *assets.Assets
 }
 
 type State interface {
@@ -27,6 +28,6 @@ func (sm *StateMachine) Update(screen *ebiten.Image) {
 	sm.Current.update(screen, sm)
 }
 
-func (sm *StateMachine) Render(screen *ebiten.Image, assets *assets.Assets) {
-	sm.Current.render(screen, assets)
+func (sm *StateMachine) Render(screen *ebiten.Image) {
+	sm.Current.render(screen, sm.Assets)
 }
