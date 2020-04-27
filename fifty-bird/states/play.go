@@ -8,6 +8,7 @@ import (
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/inpututil"
 )
 
 const GroundHeight = 16
@@ -21,11 +22,16 @@ type PlayState struct {
 }
 
 func (s *PlayState) enter() {
-	s.timer = 0
 	s.pipeInterval = utils.RandomNumInRange(1, 3)
 }
 
 func (s *PlayState) update(screen *ebiten.Image, stateMachine *StateMachine) {
+	if inpututil.IsKeyJustPressed(ebiten.KeyP) {
+		stateMachine.Change(&PauseState{
+			currentPlayState: s,
+		})
+	}
+
 	_, screenHeight := screen.Size()
 	s.timer += 1 / ebiten.CurrentTPS()
 	if int(s.timer) > s.pipeInterval {

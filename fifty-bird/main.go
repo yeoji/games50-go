@@ -7,6 +7,7 @@ import (
 	"log"
 
 	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/inpututil"
 )
 
 const SCREEN_WIDTH = 512
@@ -19,6 +20,10 @@ type Game struct {
 }
 
 func (g *Game) Update(screen *ebiten.Image) error {
+	if inpututil.IsKeyJustPressed(ebiten.KeyP) {
+		g.scene.scrolling = !g.scene.scrolling
+	}
+
 	g.scene.update()
 	g.stateMachine.Update(screen)
 
