@@ -7,6 +7,7 @@ import (
 type PipePair struct {
 	Top    Pipe
 	Bottom Pipe
+	Scored bool
 }
 
 func NewPipePair(screen *ebiten.Image) *PipePair {

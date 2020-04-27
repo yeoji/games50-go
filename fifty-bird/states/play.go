@@ -40,6 +40,10 @@ func (s *PlayState) update(screen *ebiten.Image, stateMachine *StateMachine) {
 
 	for _, pipePair := range s.PipePairs {
 		pipePair.Update(screen)
+		if !pipePair.Scored && s.Bird.HasPassedPipes(pipePair) {
+			pipePair.Scored = true
+			s.score++
+		}
 	}
 	if len(s.PipePairs) > 0 && s.PipePairs[0].IsOutOfScreen() {
 		s.PipePairs = s.PipePairs[1:]

@@ -60,8 +60,8 @@ func (b *Bird) HasHitAnyPipes(pipePairs []*PipePair) bool {
 	return false
 }
 
-func (b *Bird) HasPassedPipes() {
-
+func (b *Bird) HasPassedPipes(pipePair *PipePair) bool {
+	return b.x > (pipePair.Top.x + float64(pipePair.Top.width))
 }
 
 func (b *Bird) BoundingBox() image.Rectangle {
