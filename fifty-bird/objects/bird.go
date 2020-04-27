@@ -60,6 +60,10 @@ func (b *Bird) HasHitAnyPipes(pipePairs []*PipePair) bool {
 	return false
 }
 
+func (b *Bird) HasPassedPipes() {
+
+}
+
 func (b *Bird) BoundingBox() image.Rectangle {
 	birdWidth, birdHeight := b.image.Size()
 

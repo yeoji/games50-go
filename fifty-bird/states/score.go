@@ -2,11 +2,13 @@ package states
 
 import (
 	"fmt"
+	"games50-go/fifty-bird/objects"
 	"games50-go/internal/assets"
 	"games50-go/internal/utils"
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/inpututil"
 )
 
 type ScoreState struct {
@@ -18,7 +20,11 @@ func (s *ScoreState) enter() {
 }
 
 func (s *ScoreState) update(screen *ebiten.Image, stateMachine *StateMachine) {
-
+	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
+		stateMachine.Change(&PlayState{
+			Bird: objects.NewBird(screen),
+		})
+	}
 }
 
 func (s *ScoreState) render(screen *ebiten.Image, assets *assets.Assets) {
