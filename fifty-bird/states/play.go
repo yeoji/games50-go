@@ -13,22 +13,29 @@ import (
 const GroundHeight = 16
 
 type PlayState struct {
-	Bird      objects.Bird
-	PipePairs []*objects.PipePair
-	timer     float64
-	score     int
+	Bird         objects.Bird
+	PipePairs    []*objects.PipePair
+	timer        float64
+	pipeInterval int
+	score        int
 }
 
 func (s *PlayState) enter() {
 	s.timer = 0
+	s.pipeInterval = utils.RandomNumInRange(1, 3)
 }
 
 func (s *PlayState) update(screen *ebiten.Image, stateMachine *StateMachine) {
 	_, screenHeight := screen.Size()
 	s.timer += 1 / ebiten.CurrentTPS()
-	if s.timer > 2 {
-		s.PipePairs = append(s.PipePairs, objects.NewPipePair(screen))
+	if int(s.timer) > s.pipeInterval {
+		var lastY = -1
+		if len(s.PipePairs) > 0 {
+			lastY = s.PipePairs[len(s.PipePairs)-1].Bottom.BoundingBox().Min.Y
+		}
+		s.PipePairs = append(s.PipePairs, objects.NewPipePair(screen, lastY))
 		s.timer = 0
+		s.pipeInterval = utils.RandomNumInRange(1, 3)
 	}
 
 	s.Bird.Update()
