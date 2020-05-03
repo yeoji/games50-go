@@ -1,15 +1,23 @@
-.PHONY: build
+.PHONY: build build_darwin_x64 build_windows_x64
+
+game = pong
 
 compile-assets:
 	@go generate assets/generate.go
-	@echo "[OK] Pong static assets compiled!"
+	@echo "[OK] $(game) static assets compiled!"
 
-build: compile-assets
-	@go build -o ./build/pong *.go
-	@echo "[OK] Pong binary was created!"
+build: compile-assets build_darwin_x64 build_windows_x64
+	@echo "[OK] $(game) binary was created!"
 
-run: build
-	@./build/pong
+build_darwin_x64:
+	@GOOS=darwin GOARCH=amd64 go build -o ./build/macos-x64/$(game)
+
+build_windows_x64:
+	@GOOS=windows GOARCH=amd64 go build -o ./build/windows-x64/$(game).exe
+
+run:
+	go run *.go
 
 clean:
 	rm -rf build
+	rm -rf assets/**/*.generated.go

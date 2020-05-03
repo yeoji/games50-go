@@ -1,15 +1,22 @@
-.PHONY: build
+.PHONY: build build_darwin_x64 build_windows_x64
+
+game = fifty-bird
 
 compile-assets:
 	@go generate assets/generate.go
-	@echo "[OK] Fifty Bird static assets compiled!"
+	@echo "[OK] $(game) static assets compiled!"
 
-build: compile-assets
-	@go build -o ./build/fifty-bird *.go
-	@echo "[OK] Fifty Bird binary was created!"
+build: compile-assets build_darwin_x64 build_windows_x64
+	@echo "[OK] $(game) binary was created!"
 
-run: build
-	@./build/fifty-bird
+build_darwin_x64:
+	@GOOS=darwin GOARCH=amd64 go build -o ./build/macos-x64/$(game)
+
+build_windows_x64:
+	@GOOS=windows GOARCH=amd64 go build -o ./build/windows-x64/$(game).exe
+
+run:
+	go run *.go
 
 clean:
 	rm -rf build
