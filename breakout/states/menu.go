@@ -29,7 +29,7 @@ func (s *MenuState) Update(screen *ebiten.Image) states.State {
 	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
 		switch s.highlighted {
 		case StartOption:
-			break
+			return &PaddleSelectState{}
 		case HighScoresOption:
 			break
 		}
