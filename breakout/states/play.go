@@ -38,13 +38,20 @@ func (s *PlayState) Update(screen *ebiten.Image) states.State {
 
 		s.checkBrickCollision(ball)
 		if s.allBricksCleared() {
-			// TODO victory
+			return &ServeState{
+				paddle: s.paddle,
+				level:  objects.NewLevel(s.level.Number + 1),
+				score:  s.score,
+				health: s.health,
+			}
 		}
 
 		if ball.IsOutOfScreen() {
 			s.health--
 			if s.health == 0 {
-				// TODO game over
+				return &GameOverState{
+					score: s.score,
+				}
 			}
 			return &ServeState{
 				paddle: s.paddle,
