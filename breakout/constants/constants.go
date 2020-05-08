@@ -3,6 +3,8 @@ package constants
 const ScreenWidth = 432
 const ScreenHeight = 243
 
+const PaddleHeight = 16
+
 const BallWidth = 8
 const BallHeight = 8
 

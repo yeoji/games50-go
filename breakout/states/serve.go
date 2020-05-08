@@ -11,6 +11,7 @@ import (
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/inpututil"
 )
 
 type ServeState struct {
@@ -34,6 +35,16 @@ func (s *ServeState) Update(screen *ebiten.Image) states.State {
 	if ebiten.IsKeyPressed(ebiten.KeyRight) {
 		s.paddle.MoveRight()
 		s.ball.FollowPaddle(&s.paddle)
+	}
+
+	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
+		return &PlayState{
+			paddle: s.paddle,
+			balls:  []*objects.Ball{&s.ball},
+			level:  s.level,
+			score:  s.score,
+			health: s.health,
+		}
 	}
 	return nil
 }

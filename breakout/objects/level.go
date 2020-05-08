@@ -10,7 +10,7 @@ const BrickPadding = 8
 
 type Level struct {
 	Number int
-	Bricks []Brick
+	Bricks []*Brick
 }
 
 type RowSettings struct {
@@ -54,7 +54,7 @@ func (l *Level) generateLevelBricks() {
 
 			brickX := x*constants.BrickWidth + BrickPadding + (13-cols)*16
 			brick := NewBrick(float64(brickX), float64((y+1)*constants.BrickHeight), rowSettings.tiers[brickTierIndex], rowSettings.colours[brickColourIndex])
-			l.Bricks = append(l.Bricks, brick)
+			l.Bricks = append(l.Bricks, &brick)
 
 			if rowSettings.alternatePattern {
 				brickTierIndex = (brickTierIndex + 1) % 2
