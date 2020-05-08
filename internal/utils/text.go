@@ -37,7 +37,7 @@ func DrawText(screen *ebiten.Image, content string, x int, y int, options TextOp
 		actualX = drawingBoxWidth/2 - textWidth/2
 		break
 	case RightAlign:
-		actualX = screenWidth - textWidth
+		actualX = x - textWidth
 		break
 	}
 

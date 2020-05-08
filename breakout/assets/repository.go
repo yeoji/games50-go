@@ -3,6 +3,7 @@ package assets
 import (
 	"fmt"
 	"games50-go/breakout/assets/graphics"
+	"games50-go/breakout/constants"
 	"games50-go/internal/assets"
 	"games50-go/pong/assets/fonts"
 	"image"
@@ -53,6 +54,46 @@ func loadSprites() {
 		sprites[spriteGroup]["largest"] = breakoutSpriteSheet.SubImage(image.Rect(0, yOffset, 128, yOffset+16)).(*ebiten.Image)
 		yOffset += 16
 	}
+
+	ballColours := []string{"blue", "green", "red", "purple", "yellow", "grey", "gold"}
+	// x-offset 96 y-offset 48 x-finish 128
+	sprites["balls"] = make(map[string]*ebiten.Image)
+	xStart := 96
+	xOffset := 96
+	xLimit := 128
+	yOffset = 48
+	for _, colour := range ballColours {
+		sprites["balls"][colour] = breakoutSpriteSheet.SubImage(image.Rect(xOffset, yOffset, xOffset+constants.BallWidth, yOffset+constants.BallHeight)).(*ebiten.Image)
+		xOffset += constants.BallWidth
+		if xOffset == xLimit {
+			yOffset += constants.BallHeight
+			xOffset = xStart
+		}
+	}
+
+	brickTiers := []string{"basic", "extra", "super", "ultra"}
+	brickColours := []string{"blue", "green", "red", "purple", "yellow"}
+	xStart = 0
+	xOffset = 0
+	xLimit = 192
+	yOffset = 0
+	for _, colour := range brickColours {
+		spriteGroup := fmt.Sprintf("bricks-%s", colour)
+		sprites[spriteGroup] = make(map[string]*ebiten.Image)
+
+		for _, tier := range brickTiers {
+			sprites[spriteGroup][tier] = breakoutSpriteSheet.SubImage(image.Rect(xOffset, yOffset, xOffset+constants.BrickWidth, yOffset+constants.BrickHeight)).(*ebiten.Image)
+			xOffset += constants.BrickWidth
+			if xOffset == xLimit {
+				yOffset += constants.BrickHeight
+				xOffset = xStart
+			}
+		}
+	}
+
+	sprites["hearts"] = make(map[string]*ebiten.Image)
+	sprites["hearts"]["full"] = breakoutSpriteSheet.SubImage(image.Rect(128, 48, 128+constants.HeartWidth, 48+constants.HeartHeight)).(*ebiten.Image)
+	sprites["hearts"]["empty"] = breakoutSpriteSheet.SubImage(image.Rect(138, 48, 138+constants.HeartWidth, 48+constants.HeartHeight)).(*ebiten.Image)
 }
 
 func GetFont(name string) font.Face {

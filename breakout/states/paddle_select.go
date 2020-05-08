@@ -2,6 +2,9 @@ package states
 
 import (
 	"games50-go/breakout/assets"
+	"games50-go/breakout/constants"
+	"games50-go/breakout/objects"
+	"games50-go/breakout/objects/paddles"
 	"games50-go/internal/states"
 	"games50-go/internal/utils"
 	"image/color"
@@ -10,33 +13,28 @@ import (
 	"github.com/hajimehoshi/ebiten/inpututil"
 )
 
-type PaddleColour int
-
-const (
-	Blue PaddleColour = iota
-	Green
-	Red
-	Purple
-)
-
-func (c PaddleColour) spriteGroup() string {
-	return []string{"paddles-blue", "paddles-green", "paddles-red", "paddles-purple"}[c]
-}
-
 type PaddleSelectState struct {
-	currentPaddle PaddleColour
+	currentPaddle paddles.PaddleColour
 }
 
 func (s *PaddleSelectState) Enter() {
-	s.currentPaddle = Blue
+	s.currentPaddle = paddles.Blue
 }
 
 func (s *PaddleSelectState) Update(screen *ebiten.Image) states.State {
-	if inpututil.IsKeyJustPressed(ebiten.KeyRight) && s.currentPaddle != Purple {
+	if inpututil.IsKeyJustPressed(ebiten.KeyRight) && s.currentPaddle != paddles.Purple {
 		s.currentPaddle++
 	}
-	if inpututil.IsKeyJustPressed(ebiten.KeyLeft) && s.currentPaddle != Blue {
+	if inpututil.IsKeyJustPressed(ebiten.KeyLeft) && s.currentPaddle != paddles.Blue {
 		s.currentPaddle--
+	}
+
+	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
+		return &ServeState{
+			paddle: paddles.NewPaddle(s.currentPaddle, paddles.Small),
+			level:  objects.NewLevel(1),
+			health: constants.MaxHearts,
+		}
 	}
 	return nil
 }
@@ -63,14 +61,14 @@ func (s *PaddleSelectState) drawArrows(screen *ebiten.Image) {
 	screenWidth, screenHeight := screen.Size()
 
 	arrowLeftOptions := &ebiten.DrawImageOptions{}
-	if s.currentPaddle == Blue {
+	if s.currentPaddle == paddles.Blue {
 		arrowLeftOptions.ColorM.Scale(0.5, 0.5, 0.5, 0.5) // mute the colour to indicate we can't go left anymore
 	}
 	arrowLeftOptions.GeoM.Translate(float64(screenWidth)/4-24, float64(screenHeight-screenHeight/3))
 	screen.DrawImage(assets.GetSprite("arrows", "left"), arrowLeftOptions)
 
 	arrowRightOptions := &ebiten.DrawImageOptions{}
-	if s.currentPaddle == Purple {
+	if s.currentPaddle == paddles.Purple {
 		arrowRightOptions.ColorM.Scale(0.5, 0.5, 0.5, 0.5) // mute the colour to indicate we can't go right anymore
 	}
 	arrowRightOptions.GeoM.Translate(float64(screenWidth-screenWidth/4), float64(screenHeight-screenHeight/3))
@@ -82,7 +80,7 @@ func (s *PaddleSelectState) drawPaddle(screen *ebiten.Image) {
 
 	paddleOptions := &ebiten.DrawImageOptions{}
 	paddleOptions.GeoM.Translate(float64(screenWidth)/2-32, float64(screenHeight-screenHeight/3))
-	screen.DrawImage(assets.GetSprite(s.currentPaddle.spriteGroup(), "small"), paddleOptions)
+	screen.DrawImage(assets.GetSprite(s.currentPaddle.SpriteGroup(), "small"), paddleOptions)
 }
 
 func (s *PaddleSelectState) Exit() {
