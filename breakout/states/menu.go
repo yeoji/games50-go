@@ -31,7 +31,7 @@ func (s *MenuState) Update(screen *ebiten.Image) states.State {
 		case StartOption:
 			return &PaddleSelectState{}
 		case HighScoresOption:
-			break
+			return &HighScoresState{}
 		}
 	}
 

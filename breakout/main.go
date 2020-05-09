@@ -4,6 +4,7 @@ import (
 	assetsRepo "games50-go/breakout/assets"
 	"games50-go/breakout/assets/graphics"
 	"games50-go/breakout/constants"
+	"games50-go/breakout/data"
 	"games50-go/breakout/states"
 	"games50-go/internal/assets"
 	statesutil "games50-go/internal/states"
@@ -39,6 +40,7 @@ func main() {
 	ebiten.SetWindowTitle("Breakout")
 
 	assetsRepo.LoadAssets()
+	data.LoadHighScores()
 
 	if err := ebiten.RunGame(&Game{
 		World: &World{

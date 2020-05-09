@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"games50-go/breakout/assets"
 	"games50-go/breakout/constants"
+	"games50-go/breakout/data"
 	"games50-go/internal/states"
 	"games50-go/internal/utils"
 	"image/color"
@@ -22,11 +23,24 @@ func (s *GameOverState) Enter() {
 
 func (s *GameOverState) Update(screen *ebiten.Image) states.State {
 	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
+		if s.hasHighScore() {
+			return &EnterHighScoreState{
+				score: s.score,
+			}
+		}
 		return &MenuState{}
 	}
-	// TODO high scores
 
 	return nil
+}
+
+func (s *GameOverState) hasHighScore() bool {
+	for _, highScore := range data.GetHighScores() {
+		if highScore.Score < s.score {
+			return true
+		}
+	}
+	return false
 }
 
 func (s *GameOverState) Render(screen *ebiten.Image) {
