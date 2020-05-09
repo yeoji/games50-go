@@ -63,7 +63,7 @@ func main() {
 		"hurt":      sounds.Hurt_wav,
 	})
 
-	bgm := assets.NewLoopingAudio(sounds.MariosWay_mp3)
+	bgm := assets.NewMP3LoopingAudio(sounds.MariosWay_mp3)
 	bgm.Play()
 
 	if err := ebiten.RunGame(&Game{

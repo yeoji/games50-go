@@ -5,6 +5,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/audio"
 	"github.com/hajimehoshi/ebiten/audio/mp3"
+	"github.com/hajimehoshi/ebiten/audio/wav"
 )
 
 const SAMPLE_RATE = 44100
@@ -22,7 +23,7 @@ func loadSounds(audioContext *audio.Context, soundsToLoad SoundLoaderConfig) map
 	return sounds
 }
 
-func NewLoopingAudio(sound []byte) *audio.Player {
+func NewMP3LoopingAudio(sound []byte) *audio.Player {
 	audioContext := getAudioContext()
 
 	stream, err := mp3.Decode(audioContext, audio.BytesReadSeekCloser(sound))
@@ -30,7 +31,24 @@ func NewLoopingAudio(sound []byte) *audio.Player {
 		log.Fatalf("Error decoding audio file: %v", err)
 	}
 
-	audioPlayer, err := audio.NewPlayer(audioContext, audio.NewInfiniteLoop(stream, stream.Length()))
+	return createLoopingPlayer(stream, stream.Length())
+}
+
+func NewWavLoopingAudio(sound []byte) *audio.Player {
+	audioContext := getAudioContext()
+
+	stream, err := wav.Decode(audioContext, audio.BytesReadSeekCloser(sound))
+	if err != nil {
+		log.Fatalf("Error decoding audio file: %v", err)
+	}
+
+	return createLoopingPlayer(stream, stream.Length())
+}
+
+func createLoopingPlayer(stream audio.ReadSeekCloser, length int64) *audio.Player {
+	audioContext := getAudioContext()
+
+	audioPlayer, err := audio.NewPlayer(audioContext, audio.NewInfiniteLoop(stream, length))
 	if err != nil {
 		log.Fatalf("Error creating looping audio player: %v", err)
 	}

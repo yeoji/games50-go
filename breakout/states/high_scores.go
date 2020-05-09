@@ -24,6 +24,7 @@ func (s *HighScoresState) Enter() {
 
 func (s *HighScoresState) Update(screen *ebiten.Image) states.State {
 	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
+		assets.PlaySound("wall_hit")
 		return &MenuState{}
 	}
 	return nil

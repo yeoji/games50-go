@@ -25,9 +25,11 @@ func (s *EnterHighScoreState) Enter() {
 
 func (s *EnterHighScoreState) Update(screen *ebiten.Image) states.State {
 	if inpututil.IsKeyJustPressed(ebiten.KeyRight) && s.highlighted < 2 {
+		assets.PlaySound("select")
 		s.highlighted++
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyLeft) && s.highlighted > 0 {
+		assets.PlaySound("select")
 		s.highlighted--
 	}
 

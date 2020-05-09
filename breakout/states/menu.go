@@ -23,10 +23,13 @@ func (s *MenuState) Enter() {
 
 func (s *MenuState) Update(screen *ebiten.Image) states.State {
 	if inpututil.IsKeyJustPressed(ebiten.KeyDown) || inpututil.IsKeyJustPressed(ebiten.KeyUp) {
+		assets.PlaySound("paddle_hit")
 		s.highlighted = (s.highlighted + 1) % 2
 	}
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
+		assets.PlaySound("confirm")
+
 		switch s.highlighted {
 		case StartOption:
 			return &PaddleSelectState{}

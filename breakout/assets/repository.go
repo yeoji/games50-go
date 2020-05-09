@@ -2,10 +2,11 @@ package assets
 
 import (
 	"fmt"
+	"games50-go/breakout/assets/fonts"
 	"games50-go/breakout/assets/graphics"
+	"games50-go/breakout/assets/sounds"
 	"games50-go/breakout/constants"
 	"games50-go/internal/assets"
-	"games50-go/pong/assets/fonts"
 	"image"
 
 	"github.com/hajimehoshi/ebiten"
@@ -25,7 +26,20 @@ func LoadAssets() {
 				"large":  32,
 			},
 		},
-	}, assets.SoundLoaderConfig{})
+	}, assets.SoundLoaderConfig{
+		"brick_destroyed": sounds.Brick_hit_1_wav,
+		"brick_hit":       sounds.Brick_hit_2_wav,
+		"confirm":         sounds.Confirm_wav,
+		"high_score":      sounds.High_score_wav,
+		"hurt":            sounds.Hurt_wav,
+		"no_select":       sounds.No_select_wav,
+		"paddle_hit":      sounds.Paddle_hit_wav,
+		"pause":           sounds.Pause_wav,
+		"recover":         sounds.Recover_wav,
+		"select":          sounds.Select_wav,
+		"victory":         sounds.Victory_wav,
+		"wall_hit":        sounds.Wall_hit_wav,
+	})
 
 	loadSprites()
 }
@@ -104,6 +118,12 @@ func loadSprites() {
 
 func GetFont(name string) font.Face {
 	return loadedAssets.Fonts[name]
+}
+
+func PlaySound(name string) {
+	sound := loadedAssets.Sounds[name]
+	sound.Play()
+	sound.Rewind()
 }
 
 func GetSprite(group string, name string) *ebiten.Image {

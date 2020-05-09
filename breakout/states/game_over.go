@@ -24,6 +24,7 @@ func (s *GameOverState) Enter() {
 func (s *GameOverState) Update(screen *ebiten.Image) states.State {
 	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
 		if s.hasHighScore() {
+			assets.PlaySound("high_score")
 			return &EnterHighScoreState{
 				score: s.score,
 			}

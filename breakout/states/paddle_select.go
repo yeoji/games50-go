@@ -22,14 +22,26 @@ func (s *PaddleSelectState) Enter() {
 }
 
 func (s *PaddleSelectState) Update(screen *ebiten.Image) states.State {
-	if inpututil.IsKeyJustPressed(ebiten.KeyRight) && s.currentPaddle != paddles.Purple {
-		s.currentPaddle++
+	if inpututil.IsKeyJustPressed(ebiten.KeyRight) {
+		if s.currentPaddle != paddles.Purple {
+			assets.PlaySound("select")
+			s.currentPaddle++
+		} else {
+			assets.PlaySound("no_select")
+		}
 	}
-	if inpututil.IsKeyJustPressed(ebiten.KeyLeft) && s.currentPaddle != paddles.Blue {
-		s.currentPaddle--
+	if inpututil.IsKeyJustPressed(ebiten.KeyLeft) {
+		if s.currentPaddle != paddles.Blue {
+			assets.PlaySound("select")
+			s.currentPaddle--
+		} else {
+			assets.PlaySound("no_select")
+		}
 	}
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
+		assets.PlaySound("confirm")
+
 		return &ServeState{
 			paddle: paddles.NewPaddle(s.currentPaddle, paddles.Small),
 			level:  objects.NewLevel(1),

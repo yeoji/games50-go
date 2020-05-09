@@ -3,6 +3,7 @@ package main
 import (
 	assetsRepo "games50-go/breakout/assets"
 	"games50-go/breakout/assets/graphics"
+	"games50-go/breakout/assets/sounds"
 	"games50-go/breakout/constants"
 	"games50-go/breakout/data"
 	"games50-go/breakout/states"
@@ -38,6 +39,9 @@ func main() {
 
 	ebiten.SetWindowSize(1280, 720)
 	ebiten.SetWindowTitle("Breakout")
+
+	music := assets.NewWavLoopingAudio(sounds.Music_wav)
+	music.Play()
 
 	assetsRepo.LoadAssets()
 	data.LoadHighScores()

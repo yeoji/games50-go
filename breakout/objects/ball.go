@@ -44,16 +44,19 @@ func NewBall() *Ball {
 func (b *Ball) Move() {
 	b.x += b.dx * (1 / ebiten.CurrentTPS())
 	if b.x < 0 {
+		assets.PlaySound("wall_hit")
 		b.x = 0
 		b.dx = -b.dx
 	}
 	if b.x+constants.BallWidth > constants.ScreenWidth {
+		assets.PlaySound("wall_hit")
 		b.x = constants.ScreenWidth - constants.BallWidth
 		b.dx = -b.dx
 	}
 
 	b.y += b.dy * (1 / ebiten.CurrentTPS())
 	if b.y < 0 {
+		assets.PlaySound("wall_hit")
 		b.y = 0
 		b.dy = -b.dy
 	}
@@ -80,8 +83,8 @@ func (b *Ball) HitBrick(brick *Brick, keyPowerup bool) int {
 	}
 
 	// offset the check by a couple of pixels so that flush corner hits register as Y flips, not X flips
-	leftCornerOffset := 6
-	rightCornerOffset := 2
+	leftCornerOffset := 3
+	rightCornerOffset := 5
 
 	if b.x+float64(leftCornerOffset) < brick.x && b.dx > 0 {
 		// left edge hit

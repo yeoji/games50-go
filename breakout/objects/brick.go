@@ -42,6 +42,8 @@ func NewBrick(x float64, y float64, tier brickTier, colour colour) Brick {
 }
 
 func (b *Brick) Hit() {
+	assets.PlaySound("brick_hit")
+
 	if b.Locked {
 		b.Locked = false
 		return
@@ -55,6 +57,7 @@ func (b *Brick) Hit() {
 			b.colour = Yellow
 		} else {
 			b.InPlay = false
+			assets.PlaySound("brick_destroyed")
 		}
 	}
 }
