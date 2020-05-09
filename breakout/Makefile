@@ -11,9 +11,11 @@ build: compile-assets build_darwin_x64 build_windows_x64
 
 build_darwin_x64:
 	@GOOS=darwin GOARCH=amd64 go build -o ./build/macos-x64/$(game)
+	@cd build && zip -r $(game)-macos-x64.zip macos-x64
 
 build_windows_x64:
 	@GOOS=windows GOARCH=amd64 go build -o ./build/windows-x64/$(game).exe
+	@cd build && zip -r $(game)-windows-x64.zip windows-x64
 
 run:
 	go run *.go
