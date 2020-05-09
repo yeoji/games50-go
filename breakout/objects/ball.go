@@ -35,8 +35,8 @@ type Ball struct {
 	colour colour
 }
 
-func NewBall() Ball {
-	return Ball{
+func NewBall() *Ball {
+	return &Ball{
 		colour: colour(utils.RandomNumInRange(0, 6)),
 	}
 }
@@ -68,16 +68,20 @@ func (b *Ball) Serve() {
 	b.dy = float64(utils.RandomNumInRange(-60, -50))
 }
 
-func (b *Ball) HitBrick(brick *Brick) {
+func (b *Ball) HitBrick(brick *Brick, keyPowerup bool) int {
 	if !brick.InPlay {
-		return
+		return 0
 	}
 
-	brick.Hit()
+	brickScore := 0
+	if !brick.Locked || keyPowerup {
+		brickScore = brick.Score()
+		brick.Hit()
+	}
 
 	// offset the check by a couple of pixels so that flush corner hits register as Y flips, not X flips
-	leftCornerOffset := 2
-	rightCornerOffset := 6
+	leftCornerOffset := 6
+	rightCornerOffset := 2
 
 	if b.x+float64(leftCornerOffset) < brick.x && b.dx > 0 {
 		// left edge hit
@@ -100,6 +104,8 @@ func (b *Ball) HitBrick(brick *Brick) {
 	if math.Abs(b.dy) < 150 {
 		b.dy = b.dy * 1.02
 	}
+
+	return brickScore
 }
 
 func (b *Ball) BounceOffPaddle(paddle *paddles.Paddle) {

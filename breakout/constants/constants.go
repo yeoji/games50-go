@@ -14,3 +14,6 @@ const BrickHeight = 16
 const HeartWidth = 10
 const HeartHeight = 10
 const MaxHearts = 3
+
+const PowerupWidth = 16
+const PowerupHeight = 16

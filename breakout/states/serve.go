@@ -16,7 +16,7 @@ import (
 
 type ServeState struct {
 	paddle paddles.Paddle
-	ball   objects.Ball
+	ball   *objects.Ball
 	level  objects.Level
 	score  int
 	health int
@@ -40,7 +40,7 @@ func (s *ServeState) Update(screen *ebiten.Image) states.State {
 	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
 		return &PlayState{
 			paddle: s.paddle,
-			balls:  []*objects.Ball{&s.ball},
+			balls:  []*objects.Ball{s.ball},
 			level:  s.level,
 			score:  s.score,
 			health: s.health,

@@ -44,6 +44,18 @@ func (p *Paddle) MoveRight() {
 	}
 }
 
+func (p *Paddle) Grow() {
+	if p.Size != Largest {
+		p.Size++
+	}
+}
+
+func (p *Paddle) Shrink() {
+	if p.Size != Smallest {
+		p.Size--
+	}
+}
+
 func (p *Paddle) Direction() float64 {
 	return p.dx
 }

@@ -62,6 +62,11 @@ func (l *Level) generateLevelBricks() {
 			}
 		}
 	}
+
+	lockedBrick := utils.RandomNumInRange(1, 2) == 1
+	if lockedBrick {
+		l.Bricks[utils.RandomNumInRange(0, len(l.Bricks))].Locked = true
+	}
 }
 
 func (l *Level) getHighestPossibleTier() brickTier {
@@ -80,6 +85,15 @@ func (l *Level) getHighestPossibleColour() colour {
 		highestColour = levelColour
 	}
 	return highestColour
+}
+
+func (l *Level) HasLockedBrick() bool {
+	for _, brick := range l.Bricks {
+		if brick.Locked {
+			return true
+		}
+	}
+	return false
 }
 
 func generateRowSettings(highestTier brickTier, highestColour colour) RowSettings {

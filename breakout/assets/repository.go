@@ -90,10 +90,16 @@ func loadSprites() {
 			}
 		}
 	}
+	sprites["bricks"] = make(map[string]*ebiten.Image)
+	sprites["bricks"]["locked"] = breakoutSpriteSheet.SubImage(image.Rect(160, 48, 160+constants.BrickWidth, 48+constants.BrickHeight)).(*ebiten.Image)
 
 	sprites["hearts"] = make(map[string]*ebiten.Image)
 	sprites["hearts"]["full"] = breakoutSpriteSheet.SubImage(image.Rect(128, 48, 128+constants.HeartWidth, 48+constants.HeartHeight)).(*ebiten.Image)
 	sprites["hearts"]["empty"] = breakoutSpriteSheet.SubImage(image.Rect(138, 48, 138+constants.HeartWidth, 48+constants.HeartHeight)).(*ebiten.Image)
+
+	sprites["powerups"] = make(map[string]*ebiten.Image)
+	sprites["powerups"]["extra-balls"] = breakoutSpriteSheet.SubImage(image.Rect(128, 192, 128+constants.PowerupWidth, 192+constants.PowerupHeight)).(*ebiten.Image)
+	sprites["powerups"]["key"] = breakoutSpriteSheet.SubImage(image.Rect(144, 192, 144+constants.PowerupWidth, 192+constants.PowerupHeight)).(*ebiten.Image)
 }
 
 func GetFont(name string) font.Face {

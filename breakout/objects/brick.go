@@ -28,6 +28,7 @@ type Brick struct {
 	tier   brickTier
 	colour colour
 	InPlay bool
+	Locked bool
 }
 
 func NewBrick(x float64, y float64, tier brickTier, colour colour) Brick {
@@ -41,6 +42,11 @@ func NewBrick(x float64, y float64, tier brickTier, colour colour) Brick {
 }
 
 func (b *Brick) Hit() {
+	if b.Locked {
+		b.Locked = false
+		return
+	}
+
 	if int(b.colour) > int(Blue) {
 		b.colour--
 	} else {
@@ -54,7 +60,10 @@ func (b *Brick) Hit() {
 }
 
 func (b *Brick) Score() int {
-	return int(b.tier)*200 + int(b.colour)*25
+	if b.Locked {
+		return 2000
+	}
+	return int(b.tier)*200 + (int(b.colour)+1)*25
 }
 
 func (b *Brick) Render(screen *ebiten.Image) {
@@ -62,7 +71,11 @@ func (b *Brick) Render(screen *ebiten.Image) {
 		brickOptions := &ebiten.DrawImageOptions{}
 		brickOptions.GeoM.Translate(b.x, b.y)
 
-		screen.DrawImage(assets.GetSprite(fmt.Sprintf("bricks-%s", b.colour.string()), b.tier.string()), brickOptions)
+		if b.Locked {
+			screen.DrawImage(assets.GetSprite("bricks", "locked"), brickOptions)
+		} else {
+			screen.DrawImage(assets.GetSprite(fmt.Sprintf("bricks-%s", b.colour.string()), b.tier.string()), brickOptions)
+		}
 	}
 }
 
