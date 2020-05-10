@@ -15,6 +15,7 @@
 //go:generate file2byteslice -package=graphics -input=./graphics/arrows.png -output=./graphics/arrows.png.generated.go -var=Arrows_png
 //go:generate file2byteslice -package=graphics -input=./graphics/background.png -output=./graphics/background.png.generated.go -var=Background_png
 //go:generate file2byteslice -package=graphics -input=./graphics/breakout.png -output=./graphics/breakout.png.generated.go -var=Breakout_png
+//go:generate file2byteslice -package=graphics -input=./graphics/particle.png -output=./graphics/particle.png.generated.go -var=Particle_png
 //go:generate gofmt -s -w .
 
 package assets

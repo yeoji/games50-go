@@ -132,6 +132,9 @@ func loadSprites() {
 		}},
 	})
 	assets.GroupSprites(powerupSprites, sprites, []string{"powerups"}, []string{"extra-balls", "key"})
+
+	sprites["particles"] = make(map[string]*ebiten.Image)
+	sprites["particles"]["brick-explode"] = assets.LoadImage(graphics.Particle_png)
 }
 
 func GetFont(name string) font.Face {

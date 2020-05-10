@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"games50-go/breakout/assets"
 	"games50-go/breakout/constants"
+	"games50-go/internal/particles"
 	"image"
+	"image/color"
 
 	"github.com/hajimehoshi/ebiten"
 )
@@ -23,26 +25,55 @@ func (t brickTier) string() string {
 }
 
 type Brick struct {
-	x      float64
-	y      float64
-	tier   brickTier
-	colour colour
-	InPlay bool
-	Locked bool
+	x        float64
+	y        float64
+	tier     brickTier
+	colour   colour
+	InPlay   bool
+	Locked   bool
+	pEmitter *particles.ParticleEmitter
 }
 
 func NewBrick(x float64, y float64, tier brickTier, colour colour) Brick {
-	return Brick{
-		x:      x,
-		y:      y,
-		tier:   tier,
-		colour: colour,
-		InPlay: true,
+	pEmitter := particles.ParticleEmitter{
+		ParticleImage: assets.GetSprite("particles", "brick-explode"),
+		Config: particles.ParticleEmitterConfig{
+			MaxParticles: 64,
+			EmitterLife:  0.5,
+			Lifetime:     particles.Range{Min: 0.5, Max: 1},
+			Acceleration: particles.Acceleration{MinX: -15, MinY: 0, MaxX: 15, MaxY: 80},
+			Spawn: particles.Spawn{
+				SpawnType: "rect",
+				SpawnRect: particles.SpawnRect{
+					Height:   20,
+					Width:    20,
+					Position: particles.Position{X: -10, Y: -10},
+				},
+				Frequency: 0.01,
+				Position:  particles.Position{X: x + 16, Y: y + 8},
+			},
+			Colours: []color.Color{color.RGBA{106, 190, 47, 110}, color.RGBA{106, 190, 47, 0}},
+		},
 	}
+
+	return Brick{
+		x:        x,
+		y:        y,
+		tier:     tier,
+		colour:   colour,
+		InPlay:   true,
+		pEmitter: &pEmitter,
+	}
+}
+
+func (b *Brick) Update() {
+	b.pEmitter.Update()
 }
 
 func (b *Brick) Hit() {
 	assets.PlaySound("brick_hit")
+
+	b.pEmitter.Emit()
 
 	if b.Locked {
 		b.Locked = false
@@ -80,6 +111,8 @@ func (b *Brick) Render(screen *ebiten.Image) {
 			screen.DrawImage(assets.GetSprite(fmt.Sprintf("bricks-%s", b.colour.string()), b.tier.string()), brickOptions)
 		}
 	}
+
+	b.pEmitter.Render(screen)
 }
 
 func (b *Brick) BoundingBox() image.Rectangle {

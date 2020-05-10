@@ -115,6 +115,10 @@ func (s *PlayState) Update(screen *ebiten.Image) states.State {
 		s.paddle.Grow()
 	}
 
+	for _, brick := range s.level.Bricks {
+		brick.Update()
+	}
+
 	return nil
 }
 
