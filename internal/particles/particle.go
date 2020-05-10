@@ -3,9 +3,9 @@ package particles
 import (
 	"games50-go/internal/utils"
 	"image/color"
+	"math"
 
 	"github.com/hajimehoshi/ebiten"
-	"github.com/rs/zerolog/log"
 )
 
 type Particle struct {
@@ -34,7 +34,7 @@ func NewParticle(image *ebiten.Image, lifetime float64, position Position, accel
 }
 
 func (p *Particle) Update() {
-	delta := 1 / ebiten.CurrentTPS()
+	delta := math.Max(0, 1/ebiten.CurrentTPS())
 	p.remainingLife -= delta
 
 	// update the velocity of the particle
@@ -89,15 +89,10 @@ func (p *Particle) Render(screen *ebiten.Image) {
 	particleOptions.GeoM.Translate(p.position.X, p.position.Y)
 
 	if p.activeColour != nil {
-		log.Printf("initial %s", particleOptions.ColorM.String())
 		r, g, b, a := p.activeColour.RGBA()
 		r, g, b, a = r/0x101, g/0x101, b/0x101, a/0x101
-		log.Printf("rgba %d, %d, %d, %d", r, g, b, a)
 
 		particleOptions.ColorM.Scale(float64(r)/0xff, float64(g)/0xff, float64(b)/0xff, float64(a)/0xff)
-		log.Printf("scaled %s", particleOptions.ColorM.String())
-		// particleOptions.ColorM.Translate(float64(r)/0xff, float64(g)/0xff, float64(b)/0xff, 0)
-		// log.Printf("translated %s", particleOptions.ColorM.String())
 	}
 
 	screen.DrawImage(p.image, particleOptions)

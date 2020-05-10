@@ -2,6 +2,7 @@ package particles
 
 import (
 	"games50-go/internal/utils"
+	"math"
 	"time"
 
 	"github.com/hajimehoshi/ebiten"
@@ -48,7 +49,7 @@ func (e *ParticleEmitter) Update() {
 		return
 	}
 
-	e.lifetime += 1 / ebiten.CurrentTPS()
+	e.lifetime += math.Max(0, 1/ebiten.CurrentTPS())
 
 	var particlesToRemove []int
 	for index, particle := range e.particles {
@@ -70,6 +71,7 @@ func (e *ParticleEmitter) Update() {
 }
 
 func (e *ParticleEmitter) removeParticles(particlesToRemove []int) {
+	log.Printf("removing particles %v", particlesToRemove)
 	var updatedParticles []*Particle
 	updatedParticles = append(updatedParticles, e.particles[:particlesToRemove[0]]...)
 
@@ -87,7 +89,6 @@ func (e *ParticleEmitter) spawnParticle() {
 	position := e.Config.Spawn.SpawnPosition()
 
 	e.particles = append(e.particles, NewParticle(e.ParticleImage, lifetime, position, e.Config.Acceleration, e.Config.Colours))
-	log.Printf("Added particle: %d", len(e.particles))
 }
 
 func (e *ParticleEmitter) Render(screen *ebiten.Image) {
@@ -96,7 +97,6 @@ func (e *ParticleEmitter) Render(screen *ebiten.Image) {
 	}
 
 	for _, particle := range e.particles {
-		log.Printf("Rendering particle")
 		particle.Render(screen)
 	}
 }
