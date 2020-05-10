@@ -5,12 +5,14 @@ import (
 	"time"
 
 	"github.com/hajimehoshi/ebiten"
+	"github.com/rs/zerolog/log"
 )
 
 type ParticleEmitter struct {
 	ParticleImage *ebiten.Image
 	Config        ParticleEmitterConfig
 	particles     []*Particle
+	lifetime      float64
 	active        bool
 	stopped       chan bool
 }
@@ -22,6 +24,9 @@ func (e *ParticleEmitter) Emit() {
 
 	e.stopped = make(chan bool, 1)
 	e.active = true
+
+	log.Printf("Started emitting")
+
 	go func() {
 		for {
 			select {
@@ -31,7 +36,7 @@ func (e *ParticleEmitter) Emit() {
 				if len(e.particles) < e.Config.MaxParticles {
 					e.spawnParticle()
 
-					time.Sleep(time.Duration(e.Config.Spawn.Frequency) * time.Second)
+					time.Sleep(e.Config.Spawn.Frequency)
 				}
 			}
 		}
@@ -43,7 +48,7 @@ func (e *ParticleEmitter) Update() {
 		return
 	}
 
-	e.Config.EmitterLife -= 1 / ebiten.CurrentTPS()
+	e.lifetime += 1 / ebiten.CurrentTPS()
 
 	var particlesToRemove []int
 	for index, particle := range e.particles {
@@ -58,7 +63,7 @@ func (e *ParticleEmitter) Update() {
 		e.removeParticles(particlesToRemove)
 	}
 
-	if e.Config.EmitterLife <= 0 {
+	if e.lifetime >= e.Config.EmitterLife.Seconds() {
 		e.active = false
 		e.stopped <- true
 	}
@@ -80,7 +85,9 @@ func (e *ParticleEmitter) spawnParticle() {
 	lifetime := utils.RandomFloatInRange(e.Config.Lifetime.Min, e.Config.Lifetime.Max)
 
 	position := e.Config.Spawn.SpawnPosition()
+
 	e.particles = append(e.particles, NewParticle(e.ParticleImage, lifetime, position, e.Config.Acceleration, e.Config.Colours))
+	log.Printf("Added particle: %d", len(e.particles))
 }
 
 func (e *ParticleEmitter) Render(screen *ebiten.Image) {
@@ -89,6 +96,7 @@ func (e *ParticleEmitter) Render(screen *ebiten.Image) {
 	}
 
 	for _, particle := range e.particles {
+		log.Printf("Rendering particle")
 		particle.Render(screen)
 	}
 }

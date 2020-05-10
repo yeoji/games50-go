@@ -7,6 +7,7 @@ import (
 	"games50-go/internal/particles"
 	"image"
 	"image/color"
+	"time"
 
 	"github.com/hajimehoshi/ebiten"
 )
@@ -39,17 +40,17 @@ func NewBrick(x float64, y float64, tier brickTier, colour colour) Brick {
 		ParticleImage: assets.GetSprite("particles", "brick-explode"),
 		Config: particles.ParticleEmitterConfig{
 			MaxParticles: 64,
-			EmitterLife:  0.5,
+			EmitterLife:  600 * time.Millisecond,
 			Lifetime:     particles.Range{Min: 0.5, Max: 1},
 			Acceleration: particles.Acceleration{MinX: -15, MinY: 0, MaxX: 15, MaxY: 80},
 			Spawn: particles.Spawn{
-				SpawnType: "rect",
+				SpawnType: particles.SpawnTypeRect,
 				SpawnRect: particles.SpawnRect{
-					Height:   20,
-					Width:    20,
-					Position: particles.Position{X: -10, Y: -10},
+					Height: 40,
+					Width:  30,
+					Offset: particles.Position{X: -10, Y: -20},
 				},
-				Frequency: 0.01,
+				Frequency: 10 * time.Millisecond,
 				Position:  particles.Position{X: x + 16, Y: y + 8},
 			},
 			Colours: []color.Color{color.RGBA{106, 190, 47, 110}, color.RGBA{106, 190, 47, 0}},

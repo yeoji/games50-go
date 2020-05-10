@@ -2,6 +2,7 @@ package particles
 
 import (
 	"games50-go/internal/utils"
+	"time"
 )
 
 const SpawnTypePoint = "point"
@@ -11,13 +12,13 @@ const SpawnTypeCircle = "circle"
 type SpawnRect struct {
 	Height float64
 	Width  float64
-	Position
+	Offset Position
 }
 
 func (s *SpawnRect) spawnPosition(emitterPos Position) Position {
 	return Position{
-		X: emitterPos.X + utils.RandomFloatInRange(s.Position.X, s.Position.X+s.Width),
-		Y: emitterPos.Y + utils.RandomFloatInRange(s.Position.Y, s.Position.Y+s.Height),
+		X: emitterPos.X + utils.RandomFloatInRange(s.Offset.X, s.Offset.X+s.Width),
+		Y: emitterPos.Y + utils.RandomFloatInRange(s.Offset.Y, s.Offset.Y+s.Height),
 	}
 }
 
@@ -28,7 +29,7 @@ type SpawnCircle struct {
 
 type Spawn struct {
 	SpawnType   string
-	Frequency   float64
+	Frequency   time.Duration
 	Position    Position
 	SpawnRect   SpawnRect
 	SpawnCircle SpawnCircle

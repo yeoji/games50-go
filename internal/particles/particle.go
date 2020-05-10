@@ -89,12 +89,15 @@ func (p *Particle) Render(screen *ebiten.Image) {
 	particleOptions.GeoM.Translate(p.position.X, p.position.Y)
 
 	if p.activeColour != nil {
+		log.Printf("initial %s", particleOptions.ColorM.String())
 		r, g, b, a := p.activeColour.RGBA()
 		r, g, b, a = r/0x101, g/0x101, b/0x101, a/0x101
 		log.Printf("rgba %d, %d, %d, %d", r, g, b, a)
 
-		particleOptions.ColorM.Scale(0, 0, 0, 1)
-		particleOptions.ColorM.Translate(float64(r)/0xff, float64(g)/0xff, float64(b)/0xff, float64(a)/0xff)
+		particleOptions.ColorM.Scale(float64(r)/0xff, float64(g)/0xff, float64(b)/0xff, float64(a)/0xff)
+		log.Printf("scaled %s", particleOptions.ColorM.String())
+		// particleOptions.ColorM.Translate(float64(r)/0xff, float64(g)/0xff, float64(b)/0xff, 0)
+		// log.Printf("translated %s", particleOptions.ColorM.String())
 	}
 
 	screen.DrawImage(p.image, particleOptions)

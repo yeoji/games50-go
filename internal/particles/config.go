@@ -1,6 +1,9 @@
 package particles
 
-import "image/color"
+import (
+	"image/color"
+	"time"
+)
 
 type ParticleEmitterConfig struct {
 	MaxParticles int
@@ -8,7 +11,7 @@ type ParticleEmitterConfig struct {
 	Acceleration Acceleration
 	Spawn        Spawn
 	Colours      []color.Color
-	EmitterLife  float64
+	EmitterLife  time.Duration
 }
 
 type Range struct {
