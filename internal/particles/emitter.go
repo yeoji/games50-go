@@ -34,6 +34,10 @@ func (e *ParticleEmitter) Emit() {
 			case <-e.stopped:
 				return
 			default:
+				if len(e.particles) == e.Config.MaxParticles && e.Config.EmitterLife.Seconds() == 0 {
+					e.stopped <- true
+				}
+
 				if len(e.particles) < e.Config.MaxParticles {
 					e.spawnParticle()
 
@@ -64,14 +68,13 @@ func (e *ParticleEmitter) Update() {
 		e.removeParticles(particlesToRemove)
 	}
 
-	if e.lifetime >= e.Config.EmitterLife.Seconds() {
+	if e.Config.EmitterLife.Seconds() > 0 && e.lifetime >= e.Config.EmitterLife.Seconds() {
 		e.active = false
 		e.stopped <- true
 	}
 }
 
 func (e *ParticleEmitter) removeParticles(particlesToRemove []int) {
-	log.Printf("removing particles %v", particlesToRemove)
 	var updatedParticles []*Particle
 	updatedParticles = append(updatedParticles, e.particles[:particlesToRemove[0]]...)
 
@@ -80,6 +83,11 @@ func (e *ParticleEmitter) removeParticles(particlesToRemove []int) {
 	}
 
 	e.particles = updatedParticles
+
+	if len(e.particles) == 0 {
+		e.active = false
+		e.stopped <- true
+	}
 }
 
 func (e *ParticleEmitter) spawnParticle() {

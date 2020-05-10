@@ -3,7 +3,6 @@ package particles
 import (
 	"games50-go/internal/utils"
 	"image/color"
-	"math"
 
 	"github.com/hajimehoshi/ebiten"
 )
@@ -34,7 +33,10 @@ func NewParticle(image *ebiten.Image, lifetime float64, position Position, accel
 }
 
 func (p *Particle) Update() {
-	delta := math.Max(0, 1/ebiten.CurrentTPS())
+	delta := 0.0
+	if ebiten.CurrentTPS() > 0 {
+		delta = 1 / ebiten.CurrentTPS()
+	}
 	p.remainingLife -= delta
 
 	// update the velocity of the particle

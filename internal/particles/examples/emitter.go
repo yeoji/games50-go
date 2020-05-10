@@ -56,19 +56,17 @@ func newParticleEmitter() *particles.ParticleEmitter {
 	return &particles.ParticleEmitter{
 		ParticleImage: assets.LoadImage(graphics.Particle_png),
 		Config: particles.ParticleEmitterConfig{
-			MaxParticles: 64,
-			EmitterLife:  600 * time.Millisecond,
+			MaxParticles: 30,
 			Lifetime:     particles.Range{Min: 0.5, Max: 1},
-			Acceleration: particles.Acceleration{MinX: -15, MinY: 0, MaxX: 15, MaxY: 80},
+			Acceleration: particles.Acceleration{MinX: -60, MinY: 40, MaxX: 60, MaxY: 80},
 			Spawn: particles.Spawn{
 				SpawnType: particles.SpawnTypeRect,
 				SpawnRect: particles.SpawnRect{
-					Height: 40,
-					Width:  30,
+					Height: 25,
+					Width:  20,
 					Offset: particles.Position{X: 0, Y: 0},
 				},
-				Frequency: 10 * time.Millisecond,
-				Position:  particles.Position{X: 50, Y: 50},
+				Position: particles.Position{X: 50, Y: 50},
 			},
 			Colours: []color.Color{color.RGBA{106, 190, 47, 110}, color.RGBA{106, 190, 47, 0}},
 		},
