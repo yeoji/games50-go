@@ -30,3 +30,7 @@ type Position struct {
 	X float64
 	Y float64
 }
+
+func (e *ParticleEmitter) SetColours(colours []color.Color) {
+	e.Config.Colours = colours
+}

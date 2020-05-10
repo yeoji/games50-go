@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/hajimehoshi/ebiten"
-	"github.com/rs/zerolog/log"
 )
 
 type ParticleEmitter struct {
@@ -25,8 +24,6 @@ func (e *ParticleEmitter) Emit() {
 
 	e.stopped = make(chan bool, 1)
 	e.active = true
-
-	log.Printf("Started emitting")
 
 	go func() {
 		for {

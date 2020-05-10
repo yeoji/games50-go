@@ -186,6 +186,9 @@ func (s *PlayState) Render(screen *ebiten.Image) {
 	for _, brick := range s.level.Bricks {
 		brick.Render(screen)
 	}
+	for _, brick := range s.level.Bricks {
+		brick.RenderParticles(screen)
+	}
 
 	renderScore(s.score, screen)
 	renderHealth(s.health, screen)

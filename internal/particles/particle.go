@@ -21,7 +21,7 @@ type Particle struct {
 }
 
 func NewParticle(image *ebiten.Image, lifetime float64, position Position, acceleration Acceleration, colours []color.Color) *Particle {
-	return &Particle{
+	p := &Particle{
 		image:         image,
 		lifetime:      lifetime,
 		remainingLife: lifetime,
@@ -30,6 +30,13 @@ func NewParticle(image *ebiten.Image, lifetime float64, position Position, accel
 		accelerationY: utils.RandomFloatInRange(acceleration.MinY, acceleration.MaxY),
 		colours:       colours,
 	}
+
+	// initialize the active colour
+	if len(p.colours) > 0 {
+		p.activeColour = p.colours[0]
+	}
+
+	return p
 }
 
 func (p *Particle) Update() {
