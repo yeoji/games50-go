@@ -7,11 +7,11 @@ import (
 	"image/color"
 	_ "image/png"
 	"log"
+	"math/rand"
 	"time"
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/inpututil"
-	"k8s.io/apimachinery/pkg/util/rand"
 )
 
 type TestApp struct {
